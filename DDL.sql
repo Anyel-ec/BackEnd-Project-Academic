@@ -40,11 +40,8 @@ CREATE TABLE Carrera (
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
 
-
-
-
 CREATE TABLE Docentes (
-    codigo_docente INT AUTO_INCREMENT PRIMARY KEY,
+    id_docente INT AUTO_INCREMENT PRIMARY KEY,
     DNI INT NOT NULL,
     nombres VARCHAR(150) NOT NULL,
     apellido_paterno VARCHAR(50) NOT NULL,
@@ -55,16 +52,26 @@ CREATE TABLE Docentes (
     direccion VARCHAR(255),
     activo BOOLEAN DEFAULT true
 );
+
 CREATE TABLE Tesis (
     id_tesis INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
     fecha_publicacion DATE,
     id_carrera INT NOT NULL,
-    id_asesor INT,
+    id_docente INT,
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera),
-    FOREIGN KEY (id_asesor) REFERENCES Docentes(codigo_docente)
+    FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
 );
+
+CREATE TABLE Co_Asesores_Tesis (
+    id_co_asesor INT AUTO_INCREMENT PRIMARY KEY,
+    id_tesis INT NOT NULL,
+    id_docente INT NOT NULL,
+    FOREIGN KEY (id_tesis) REFERENCES Tesis(id_tesis),
+    FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
+);
+
 CREATE TABLE Estudiantes (
     codigo_estudiante INT AUTO_INCREMENT PRIMARY KEY,
     DNI INT NOT NULL,
@@ -86,7 +93,7 @@ CREATE TABLE Docentes_Carrera (
     id_docente INT,
     id_carrera INT,
     PRIMARY KEY (id_docente, id_carrera),
-    FOREIGN KEY (id_docente) REFERENCES Docentes(codigo_docente),
+    FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente),
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera)
 );
 
@@ -96,7 +103,7 @@ CREATE TABLE Jurados_Tesis (
     id_docente INT NOT NULL,
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_tesis) REFERENCES Tesis(id_tesis),
-    FOREIGN KEY (id_docente) REFERENCES Docentes(codigo_docente)
+    FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
 );
 
 CREATE TABLE Secretaria (
@@ -128,7 +135,6 @@ CREATE TABLE Administrador (
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
-
 
 -- SEGUIMIENTO (APP)
 
@@ -169,6 +175,7 @@ CREATE TABLE paso_tres_aprobacion_tesis (
     constancia_aprobacion_metodologia VARCHAR(255) NOT NULL,
     bv_aprobacion VARCHAR(255) NOT NULL COMMENT 'B/V aprobacion de proyecto en caja-tesoreria',
     cti_vitae VARCHAR(255) NOT NULL COMMENT 'CTI Vitae de CONCYTEC de asesor',
+    anillado_proyecto_tesis VARCHAR(255) NOT NULL comment 'Tesis en Fisico',
     id_estudiante INT NOT NULL,
     id_usuario INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -196,7 +203,7 @@ CREATE TABLE paso_cinco_recomposicion_jurados (
     id_recomposicion INT AUTO_INCREMENT PRIMARY KEY,
     solicitud_recomposicion VARCHAR(255) NOT NULL,
     informe_asesor_motivos VARCHAR(255) NOT NULL COMMENT 'Informe del asesor con los motivos de la recomposicion',
-    resolucion_recomposicion VARCHAR(255) NOT NULL,
+    resolucion_aprobacion VARCHAR(255) NOT NULL,
     resolucion_designacion VARCHAR(255) NOT NULL,
     id_estudiante INT NOT NULL,
     id_usuario INT NOT NULL,
@@ -237,7 +244,7 @@ CREATE TABLE paso_ocho_ampliacion_plazo (
     id_ampliacion INT AUTO_INCREMENT PRIMARY KEY,
     solicitud_ampliacion VARCHAR(255) NULL DEFAULT NULL,
     informe_asesor_ampliacion VARCHAR(255) NULL DEFAULT NULL,
-    resolucion_ampliacion VARCHAR(255) NULL DEFAULT NULL,
+    resolucion_aprobacion VARCHAR(255) NULL DEFAULT NULL,
     id_estudiante INT NOT NULL,
     id_usuario INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
