@@ -1,6 +1,6 @@
-drop database proyecto_peru_academico;
-create database proyecto_peru_academico;
-use proyecto_peru_academico;
+drop database sistema_investigacion;
+create database sistema_investigacion;
+use sistema_investigacion;
 
 -- Registro e inicio de sesion
 
@@ -10,6 +10,12 @@ CREATE TABLE roles (
     descripcion VARCHAR(255),
     activo BOOLEAN DEFAULT true
 );
+
+INSERT INTO roles (nombre, descripcion, activo) VALUES
+('secretaria', 'Responsable de la administración y gestión de documentos.', true),
+('docente', 'Encargado de impartir clases y evaluar a los estudiantes.', true),
+('estudiante', 'Persona que recibe educación o formación en la institución.', true);
+
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,6 +29,12 @@ CREATE TABLE usuarios (
     FOREIGN KEY (id_rol) REFERENCES roles(id)
 );
 
+-- Inserción de usuarios en la tabla 'usuarios'
+INSERT INTO usuarios (usuario, nombre, email, contraseña, id_rol, fecha_nacimiento, activo) VALUES
+('sec_jgarcia', 'Juana Garcia', 'juana.garcia@correo.com', 'contrasena123', 1, '1985-06-15', true),
+('doc_mlopez', 'Mario Lopez', 'mario.lopez@correo.com', 'contrasena456', 2, '1978-02-20', true),
+('est_ahernandez', 'Ana Hernandez', 'ana.hernandez@correo.com', 'contrasena789', 3, '2000-09-05', true);
+
 -- Actores Principales del Sistema
 
 CREATE TABLE Universidad (
@@ -30,6 +42,10 @@ CREATE TABLE Universidad (
     nombre VARCHAR(255) NOT NULL,
     activo BOOLEAN DEFAULT true
 );
+-- Inserción de un registro en la tabla 'Universidad'
+INSERT INTO Universidad (nombre, activo) VALUES
+('Universidad Nacional de Educación', true);
+
 
 CREATE TABLE Carrera (
     id_carrera INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +55,13 @@ CREATE TABLE Carrera (
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
+
+-- Inserción de registros en la tabla 'Carrera'
+INSERT INTO Carrera (nombre, descripcion, id_universidad, activo) VALUES
+('Ingeniería Civil', 'Carrera enfocada en el diseño, construcción y mantenimiento de infraestructuras.', 1, true),
+('Ingeniería Informática', 'Carrera centrada en el desarrollo y gestión de sistemas informáticos.', 1, true),
+('Ingeniería de Software', 'Carrera especializada en la creación y mantenimiento de software de calidad.', 1, true);
+
 
 CREATE TABLE Docentes (
     id_docente INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,6 +76,13 @@ CREATE TABLE Docentes (
     activo BOOLEAN DEFAULT true
 );
 
+-- Inserción de registros en la tabla 'Docentes'
+INSERT INTO Docentes (DNI, nombres, apellido_paterno, apellido_materno, fecha_nacimiento, correo, telefono, direccion, activo) VALUES
+(12345678, 'Carlos', 'Perez', 'Lopez', '1980-01-15', 'carlos.perez@correo.com', '098765432', 'Av. Siempre Viva 123', true),
+(23456789, 'Maria', 'Gonzalez', 'Martinez', '1975-05-22', 'maria.gonzalez@correo.com', '097654321', 'Calle Falsa 456', true),
+(34567890, 'Jose', 'Ramirez', 'Hernandez', '1983-08-30', 'jose.ramirez@correo.com', '096543210', 'Boulevard Central 789', true);
+
+
 CREATE TABLE Tesis (
     id_tesis INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
@@ -63,6 +93,12 @@ CREATE TABLE Tesis (
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera),
     FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
 );
+-- Inserción de registros en la tabla 'Tesis'
+INSERT INTO Tesis (titulo, fecha_publicacion, id_carrera, id_docente, activo) VALUES
+('Diseño y Construcción de Puentes Modernos', '2022-06-15', 1, 1, true),
+('Implementación de Sistemas de Información en la Era Digital', '2023-01-20', 2, 2, true),
+('Desarrollo de Software Seguro y Eficiente', '2023-03-10', 3, 3, true);
+
 
 CREATE TABLE Co_Asesores_Tesis (
     id_co_asesor INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,6 +107,13 @@ CREATE TABLE Co_Asesores_Tesis (
     FOREIGN KEY (id_tesis) REFERENCES Tesis(id_tesis),
     FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
 );
+
+-- Inserción de registros en la tabla 'Co_Asesores_Tesis'
+INSERT INTO Co_Asesores_Tesis (id_tesis, id_docente) VALUES
+(1, 2),
+(2, 3),
+(3, 1);
+
 
 CREATE TABLE Estudiantes (
     codigo_estudiante INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,6 +132,12 @@ CREATE TABLE Estudiantes (
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera)
 );
 
+-- Inserción de estudiantes en la tabla 'Estudiantes'
+INSERT INTO Estudiantes (DNI, nombres, apellido_paterno, apellido_materno, fecha_nacimiento, correo, telefono, direccion, id_tesis, id_carrera, activo) VALUES
+(23456789, 'Ana', 'Gomez', 'Martinez', '2001-08-15', 'ana.gomez@correo.com', '987654321', 'Calle Arequipa 456', 2, 2, true),
+(34567890, 'Pedro', 'Ramirez', 'Hernandez', '1999-03-20', 'pedro.ramirez@correo.com', '987654321', 'Jr. Tacna 789', 3, 3, true),
+(45678901, 'Luis', 'Garcia', 'Lopez', '2002-11-25', 'luis.garcia@correo.com', '987654321', 'Av. Pizarro 321', 1, 1, true);
+
 CREATE TABLE Docentes_Carrera (
     id_docente INT,
     id_carrera INT,
@@ -96,6 +145,13 @@ CREATE TABLE Docentes_Carrera (
     FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente),
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera)
 );
+
+-- Inserción de registros en la tabla 'Docentes_Carrera'
+INSERT INTO Docentes_Carrera (id_docente, id_carrera) VALUES
+(1, 1),
+(2, 2),
+(3, 3);
+
 
 CREATE TABLE Jurados_Tesis (
     id_jurado INT AUTO_INCREMENT PRIMARY KEY,
@@ -105,6 +161,13 @@ CREATE TABLE Jurados_Tesis (
     FOREIGN KEY (id_tesis) REFERENCES Tesis(id_tesis),
     FOREIGN KEY (id_docente) REFERENCES Docentes(id_docente)
 );
+
+-- Inserción de registros en la tabla 'Jurados_Tesis'
+INSERT INTO Jurados_Tesis (id_tesis, id_docente, activo) VALUES
+(1, 2, true),
+(2, 3, true),
+(3, 1, true);
+
 
 CREATE TABLE Secretaria (
     id_secretaria INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,6 +184,12 @@ CREATE TABLE Secretaria (
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
 
+-- Inserción de una secretaria en la tabla 'Secretaria'
+INSERT INTO Secretaria (DNI, nombres, apellido_paterno, apellido_materno, fecha_nacimiento, correo, telefono, direccion, activo, id_universidad) VALUES
+(12345678, 'María', 'González', 'López', '1990-03-12', 'maria.gonzalez@correo.com', '987654321', 'Av. Universitaria 123', true, 1);
+
+
+
 CREATE TABLE Administrador (
     id_administrador INT AUTO_INCREMENT PRIMARY KEY,
     DNI INT NOT NULL,
@@ -135,6 +204,10 @@ CREATE TABLE Administrador (
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
+
+-- Inserción de un administrador en la tabla 'Administrador'
+INSERT INTO Administrador (DNI, nombres, apellido_paterno, apellido_materno, fecha_nacimiento, correo, telefono, direccion, id_universidad, activo) VALUES
+(23456789, 'Juan', 'López', 'Gómez', '1985-08-20', 'juan.lopez@correo.com', '987654321', 'Calle Principal 456', 1, true);
 
 -- SEGUIMIENTO (APP)
 
@@ -152,6 +225,14 @@ CREATE TABLE paso_uno_reserva_titulo (
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
 
+-- Inserción de registros en la tabla 'paso_uno_reserva_titulo'
+INSERT INTO paso_uno_reserva_titulo (id_estudiante, fut, historial_academico, pdf_tesis, comprobante_pago, id_usuario, created_at, updated_at, activo)
+VALUES
+(3, 'si', 'no', '/ruta/a/tesis_estudiante_3.pdf', 'si', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+(3, 'no', 'si', '/ruta/a/tesis_estudiante_3.pdf', 'no', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+(3, 'texto de observacion', 'si', '/ruta/a/tesis_estudiante_3.pdf', 'si', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+
 CREATE TABLE paso_dos_constancia_filtro (
     id_constancia INT AUTO_INCREMENT PRIMARY KEY,
     fut VARCHAR(255) NOT NULL COMMENT 'Documento FUT',
@@ -166,6 +247,13 @@ CREATE TABLE paso_dos_constancia_filtro (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+-- Inserción de registros en la tabla 'paso_dos_constancia_filtro'
+INSERT INTO paso_dos_constancia_filtro (fut, carta_aceptacion, copia_reporte, bv_emision_filtro, pdf_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'no', 'si', 'si', '/ruta/a/tesis_estudiante_3.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'si', 'no', 'texto de observacion', '/ruta/a/tesis_estudiante_3.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'si', 'si', 'no', '/ruta/a/tesis_estudiante_3.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_tres_aprobacion_tesis (
     id_aprobacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -184,6 +272,14 @@ CREATE TABLE paso_tres_aprobacion_tesis (
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
 
+-- Inserción de registros en la tabla 'paso_tres_aprobacion_tesis'
+INSERT INTO paso_tres_aprobacion_tesis (fut, constancia_filtro, anexo_cuatro, constancia_aprobacion_metodologia, bv_aprobacion, cti_vitae, anillado_proyecto_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'no', 'si', 'si', 'si', 'cti_vitae.pdf', 'tesis_fisica.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'si', 'no', 'si', 'no', 'cti_vitae.pdf', 'tesis_fisica.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'si', 'si', 'si', 'no', 'cti_vitae.pdf', 'tesis_fisica.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+
 CREATE TABLE paso_cuatro_designacion_jurados (
     id_designacion INT AUTO_INCREMENT PRIMARY KEY,
     fut VARCHAR(255) NOT NULL COMMENT 'Documento FUT',
@@ -198,6 +294,12 @@ CREATE TABLE paso_cuatro_designacion_jurados (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+-- Inserción de registros en la tabla 'paso_cuatro_designacion_jurados'
+INSERT INTO paso_cuatro_designacion_jurados (fut, informe_asesor, comprobante_pago, resolucion_aprobacion, informe_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'no, texto observacion ', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'si', 'no', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
 CREATE TABLE paso_cinco_recomposicion_jurados (
     id_recomposicion INT AUTO_INCREMENT PRIMARY KEY,
@@ -213,6 +315,14 @@ CREATE TABLE paso_cinco_recomposicion_jurados (
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
 
+-- Inserción de registros en la tabla 'paso_cinco_recomposicion_jurados'
+INSERT INTO paso_cinco_recomposicion_jurados (solicitud_recomposicion, informe_asesor_motivos, resolucion_aprobacion, resolucion_designacion, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+
 CREATE TABLE paso_seis_primera_revision (
     id_primera_revision INT AUTO_INCREMENT PRIMARY KEY,
     fut VARCHAR(255) NOT NULL COMMENT 'Documento FUT',
@@ -225,6 +335,14 @@ CREATE TABLE paso_seis_primera_revision (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+
+-- Inserción de registros en la tabla 'paso_seis_primera_revision'
+INSERT INTO paso_seis_primera_revision (fut, copia_resolucion_designacion, bv_revision_proyecto, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_siete_ultima_revision (
     id_ultima_revision INT AUTO_INCREMENT PRIMARY KEY,
@@ -239,6 +357,13 @@ CREATE TABLE paso_siete_ultima_revision (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+-- Inserción de registros en la tabla 'paso_siete_ultima_revision'
+INSERT INTO paso_siete_ultima_revision (fut, copia_primera_revision, copia_resolucion_designacion, informe_borrador_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_ocho_ampliacion_plazo (
     id_ampliacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -252,6 +377,13 @@ CREATE TABLE paso_ocho_ampliacion_plazo (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+-- Inserción de registros en la tabla 'paso_ocho_ampliacion_plazo'
+INSERT INTO paso_ocho_ampliacion_plazo (solicitud_ampliacion, informe_asesor_ampliacion, resolucion_aprobacion, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+(NULL, NULL, NULL, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+(NULL, NULL, NULL, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+(NULL, NULL, NULL, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_nueve_constancia_sustentacion (
     id_constancia_sustentacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -266,6 +398,14 @@ CREATE TABLE paso_nueve_constancia_sustentacion (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+
+-- Inserción de registros en la tabla 'paso_nueve_constancia_sustentacion'
+INSERT INTO paso_nueve_constancia_sustentacion (fut, acta_informe_final, bd_filtro_similitud, pdf_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'ruta1.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', NULL, 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'ruta2.pdf', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_diez_emision_fecha_sustentacion (
     id_emision_fecha_sustentacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -286,6 +426,16 @@ CREATE TABLE paso_diez_emision_fecha_sustentacion (
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
 
+-- Inserción de registros en la tabla 'paso_diez_emision_fecha_sustentacion'
+INSERT INTO paso_diez_emision_fecha_sustentacion
+(fut, carta_dictamen, caratula_informe_final, resolucion_aprobacion, resolucion_ampliacion, resolucion_designacion, copia_constancia_sustentacion, bv_derecho_sustentacion, copia_grado_bachiller, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', NULL, 'si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 'no', 'no', 'no', 'no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'observacion', NULL, 'observacion', 'observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+
+
 CREATE TABLE paso_once_notificacion_jurados (
     id_notificacion_jurados INT AUTO_INCREMENT PRIMARY KEY,
     solicitud_notificacion VARCHAR(255) NOT NULL,
@@ -299,6 +449,14 @@ CREATE TABLE paso_once_notificacion_jurados (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+-- Inserción de registros en la tabla paso_once_notificacion_jurados
+INSERT INTO paso_once_notificacion_jurados
+(solicitud_notificacion, resolucion_fecha_sustentacion, resolucion_designacion_jurados, informe_final_anillado, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_doce_aprobacion_sustentacion (
     id_aprobacion_sustentacion INT AUTO_INCREMENT PRIMARY KEY,
@@ -314,6 +472,14 @@ CREATE TABLE paso_doce_aprobacion_sustentacion (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+
+INSERT INTO paso_doce_aprobacion_sustentacion
+(fut, acta_sustentacion, resolucion_aprobacion, caratura_informe_final, informe_final_anillado, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
 
 CREATE TABLE paso_trece_constancia_entrega_empastados (
     id_constancia_empastado INT AUTO_INCREMENT PRIMARY KEY,
@@ -331,3 +497,10 @@ CREATE TABLE paso_trece_constancia_entrega_empastados (
     activo BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(codigo_estudiante)
 );
+
+INSERT INTO paso_trece_constancia_entrega_empastados
+(fut, copia_acta_sustentacion, dictamen_individual_sustentacion, copia_resolucion_consejo, portada_firmada_jurados, comprobante_pago, ejemplar_tesis, id_estudiante, id_usuario, created_at, updated_at, activo)
+VALUES
+('si', 'si', 'si', 'si', 'si', 'si', 'si', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('no', 'no', 'no', 'no', 'no', 'no', 'no', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+('texto de observacion', 'observacion', 'observacion', 'observacion', 'observacion', 'observacion', 'observacion', 3, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
