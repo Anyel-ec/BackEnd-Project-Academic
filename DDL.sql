@@ -24,6 +24,7 @@ CREATE TABLE usuarios (
 );
 
 -- Actores Principales del Sistema
+
 CREATE TABLE Universidad (
     id_universidad INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
@@ -39,6 +40,21 @@ CREATE TABLE Carrera (
     FOREIGN KEY (id_universidad) REFERENCES Universidad(id_universidad)
 );
 
+
+
+
+CREATE TABLE Docentes (
+    codigo_docente INT AUTO_INCREMENT PRIMARY KEY,
+    DNI INT NOT NULL,
+    nombres VARCHAR(150) NOT NULL,
+    apellido_paterno VARCHAR(50) NOT NULL,
+    apellido_materno VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE,
+    correo VARCHAR(100) NOT NULL,
+    telefono VARCHAR(9) NOT NULL,
+    direccion VARCHAR(255),
+    activo BOOLEAN DEFAULT true
+);
 CREATE TABLE Tesis (
     id_tesis INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(255) NOT NULL,
@@ -49,7 +65,6 @@ CREATE TABLE Tesis (
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera),
     FOREIGN KEY (id_asesor) REFERENCES Docentes(codigo_docente)
 );
-
 CREATE TABLE Estudiantes (
     codigo_estudiante INT AUTO_INCREMENT PRIMARY KEY,
     DNI INT NOT NULL,
@@ -65,19 +80,6 @@ CREATE TABLE Estudiantes (
     activo BOOLEAN DEFAULT true,
     FOREIGN KEY (id_tesis) REFERENCES Tesis(id_tesis),
     FOREIGN KEY (id_carrera) REFERENCES Carrera(id_carrera)
-);
-
-CREATE TABLE Docentes (
-    codigo_docente INT AUTO_INCREMENT PRIMARY KEY,
-    DNI INT NOT NULL,
-    nombres VARCHAR(150) NOT NULL,
-    apellido_paterno VARCHAR(50) NOT NULL,
-    apellido_materno VARCHAR(50) NOT NULL,
-    fecha_nacimiento DATE,
-    correo VARCHAR(100) NOT NULL,
-    telefono VARCHAR(9) NOT NULL,
-    direccion VARCHAR(255),
-    activo BOOLEAN DEFAULT true
 );
 
 CREATE TABLE Docentes_Carrera (
