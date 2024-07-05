@@ -6,6 +6,10 @@ create table roles(
     id_rol int primary key auto_increment,
     nombre_rol varchar(50) not null
 );
+create table cargos(
+    id_cargo int primary key auto_increment,
+    nombre_cargo varchar(50) not null
+);
 
 
 CREATE TABLE facultades (
@@ -23,7 +27,7 @@ CREATE TABLE carreras (
 CREATE TABLE unidad_investigacion (
     id_unidad_investigacion INT PRIMARY KEY AUTO_INCREMENT,
     nombre_unidad_investigacion VARCHAR(50) NOT NULL,
-    id_facultad INT UNIQUE, -- Relación uno a uno con facultades
+    id_facultad INT, -- Relación uno a uno con facultades
     FOREIGN KEY (id_facultad) REFERENCES facultades(id_facultad)
 );
 CREATE TABLE usuarios (
@@ -39,9 +43,14 @@ CREATE TABLE usuarios (
 );
 create table docentes(
     id_docente int primary key auto_increment,
-    nombre_docente varchar(50) not null,
-    apellido_docente varchar(50) not null,
-    correo_docente varchar(50) not null
+    DNI INT NOT NULL,
+    nombres VARCHAR(150) NOT NULL,
+    apellido_paterno VARCHAR(50) NOT NULL,
+    apellido_materno VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE,
+    correo_institucional VARCHAR(100) NOT NULL,
+    telefono VARCHAR(9) NOT NULL,
+    direccion VARCHAR(255)
 );
 
 create table docente_carrera(
@@ -51,14 +60,19 @@ create table docente_carrera(
     foreign key (id_docente) references docentes(id_docente),
     foreign key (id_carrera) references carreras(id_carrera)
 );
-
-
 create table alumnos(
     id_alumno int primary key auto_increment,
-    nombre_alumno varchar(50) not null,
-    apellido_alumno varchar(50) not null,
-    correo_alumno varchar(50) not null
+    codigo_alumno varchar(50),
+    DNI INT NOT NULL,
+    nombres VARCHAR(150) NOT NULL,
+    apellido_paterno VARCHAR(50) NOT NULL,
+    apellido_materno VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE,
+    correo VARCHAR(100) NOT NULL,
+    telefono VARCHAR(9) NOT NULL,
+    direccion VARCHAR(255)
 );
+
 create table alumno_carrera(
     id_alumno_carrera int primary key auto_increment,
     id_alumno int,
@@ -68,7 +82,7 @@ create table alumno_carrera(
 );
 
 -- dentro de los pasos
-create table reserva_titulo(
+create table p1_reserva_titulo(
     id_reserva_titulo int primary key auto_increment comment 'ID del paso Uno',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -76,7 +90,7 @@ create table reserva_titulo(
     observaciones text null default null
 );
 
-CREATE TABLE constancia_filtro (
+CREATE TABLE p2_constancia_filtro (
     id_constancia_filtro INT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID del paso Dos',
     cumple_requerimientos BOOLEAN NOT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -93,13 +107,13 @@ CREATE TABLE constancia_filtro_numero (
     numero INT NOT NULL,
     id_constancia_filtro INT,
     id_anio_planteamiento_tesis INT,
-    FOREIGN KEY (id_constancia_filtro) REFERENCES constancia_filtro(id_constancia_filtro),
+    FOREIGN KEY (id_constancia_filtro) REFERENCES p2_constancia_filtro(id_constancia_filtro),
     FOREIGN KEY (id_anio_planteamiento_tesis) REFERENCES anio_planteamiento_tesis(id_anio_planteamiento_tesis)
 );
 
 
 
-create table aprobacion_tesis(
+create table p3_aprobacion_tesis(
     id_aprobacion_tesis int primary key auto_increment comment 'ID del paso Tres',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -107,7 +121,7 @@ create table aprobacion_tesis(
     observaciones text null default null
 );
 
-create table designacion_jurados(
+create table p4_designacion_jurados(
     id_designacion_jurados int primary key auto_increment comment 'ID del paso Cuatro',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -119,12 +133,13 @@ create table docente_jurado(
     id_docente_designacion_jurados int primary key auto_increment,
     id_docente int,
     id_designacion_jurados int,
-    cargo varchar(50) not null comment 'presidente, primero, segundo,...',
+    id_cargo int not null,
+    foreign key (id_cargo) references cargos(id_cargo),
     foreign key (id_docente) references docentes(id_docente),
-    foreign key (id_designacion_jurados) references designacion_jurados(id_designacion_jurados)
+    foreign key (id_designacion_jurados) references p4_designacion_jurados(id_designacion_jurados)
 );
 
-create table recomposicion_jurados(
+create table p5_recomposicion_jurados(
     id_recomposicion_jurados int primary key auto_increment comment 'ID del paso Cinco',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -132,7 +147,7 @@ create table recomposicion_jurados(
     observaciones text null default null
 );
 
-create table primera_revision(
+create table p6_primera_revision(
     id_primera_revision int primary key auto_increment comment 'ID del paso Seis',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -140,7 +155,7 @@ create table primera_revision(
     observaciones text null default null
 );
 
-create table ultima_revision(
+create table p7_ultima_revision(
     id_ultima_revision int primary key auto_increment comment 'ID del paso Siete',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -148,7 +163,7 @@ create table ultima_revision(
     observaciones text null default null
 );
 
-create table ampliacion_plazo(
+create table p8_ampliacion_plazo(
     id_ampliacion_plazo int primary key auto_increment comment 'ID del paso Ocho',
     fecha_inicio date not null,
     fecha_fin date not null,
@@ -157,7 +172,7 @@ create table ampliacion_plazo(
     observaciones text null default null
 );
 
-create table constancia_sustentacion(
+create table p9_constancia_sustentacion(
     id_constancia_sustentacion int primary key auto_increment comment 'ID del paso Nueve',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -165,7 +180,7 @@ create table constancia_sustentacion(
     observaciones text null default null
 );
 
-create table fecha_sustentacion(
+create table p10_fecha_sustentacion(
     id_fecha_sustentacion int primary key auto_increment comment 'ID del paso Diez',
     fecha date not null,
     creado_en timestamp default current_timestamp,
@@ -173,7 +188,7 @@ create table fecha_sustentacion(
     observaciones text null default null
 );
 
-create table notificacion_jurados(
+create table p11_notificacion_jurados(
     id_notificacion_jurados int primary key auto_increment comment 'ID del paso Once',
     fecha date not null,
     creado_en timestamp default current_timestamp,
@@ -181,7 +196,7 @@ create table notificacion_jurados(
     observaciones text null default null
 );
 
-create table aprobacion_sustentacion(
+create table p12_aprobacion_sustentacion(
     id_aprobacion_sustentacion int primary key auto_increment comment 'ID del paso Doce',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -189,7 +204,7 @@ create table aprobacion_sustentacion(
     observaciones text null default null
 );
 
-create table constancia_entrega_empastados(
+create table p13_constancia_entrega_empastados(
     id_constancia_entrega_empastados int primary key auto_increment comment 'ID del paso Trece',
     cumple_requerimientos boolean not null,
     creado_en timestamp default current_timestamp,
@@ -199,9 +214,9 @@ create table constancia_entrega_empastados(
 
 CREATE TABLE asesoria_tesis (
     id_asesoria_tesis INT PRIMARY KEY AUTO_INCREMENT,
-    id_docente int,
+    id_docente_carrera int,
     id_alumno_carrera int,
-    codido_docente int,
+    co_asesor varchar(200) not null,
     titulo_tesis varchar(250) not null,
     fecha_inicio date not null,
     fecha_ampliacion date null default null,
@@ -219,27 +234,26 @@ CREATE TABLE asesoria_tesis (
     id_notificacion_jurados INT UNIQUE,
     id_aprobacion_sustentacion INT UNIQUE,
     id_constancia_entrega_empastados INT UNIQUE,
-    FOREIGN KEY (id_reserva_titulo) REFERENCES reserva_titulo(id_reserva_titulo),
-    FOREIGN KEY (id_constancia_filtro) REFERENCES constancia_filtro(id_constancia_filtro),
-    FOREIGN KEY (id_aprobacion_tesis) REFERENCES aprobacion_tesis(id_aprobacion_tesis),
-    FOREIGN KEY (id_designacion_jurados) REFERENCES designacion_jurados(id_designacion_jurados),
-    FOREIGN KEY (id_recomposicion_jurados) REFERENCES recomposicion_jurados(id_recomposicion_jurados),
-    FOREIGN KEY (id_primera_revision) REFERENCES primera_revision(id_primera_revision),
-    FOREIGN KEY (id_ultima_revision) REFERENCES ultima_revision(id_ultima_revision),
-    FOREIGN KEY (id_ampliacion_plazo) REFERENCES ampliacion_plazo(id_ampliacion_plazo),
-    FOREIGN KEY (id_constancia_sustentacion) REFERENCES constancia_sustentacion(id_constancia_sustentacion),
-    FOREIGN KEY (id_fecha_sustentacion) REFERENCES fecha_sustentacion(id_fecha_sustentacion),
-    FOREIGN KEY (id_notificacion_jurados) REFERENCES notificacion_jurados(id_notificacion_jurados),
-    FOREIGN KEY (id_aprobacion_sustentacion) REFERENCES aprobacion_sustentacion(id_aprobacion_sustentacion),
-    FOREIGN KEY (id_constancia_entrega_empastados) REFERENCES constancia_entrega_empastados(id_constancia_entrega_empastados),
-    foreign key (id_docente) references docentes(id_docente),
+    FOREIGN KEY (id_reserva_titulo) REFERENCES p1_reserva_titulo(id_reserva_titulo),
+    FOREIGN KEY (id_constancia_filtro) REFERENCES p2_constancia_filtro(id_constancia_filtro),
+    FOREIGN KEY (id_aprobacion_tesis) REFERENCES p3_aprobacion_tesis(id_aprobacion_tesis),
+    FOREIGN KEY (id_designacion_jurados) REFERENCES p4_designacion_jurados(id_designacion_jurados),
+    FOREIGN KEY (id_recomposicion_jurados) REFERENCES p5_recomposicion_jurados(id_recomposicion_jurados),
+    FOREIGN KEY (id_primera_revision) REFERENCES p6_primera_revision(id_primera_revision),
+    FOREIGN KEY (id_ultima_revision) REFERENCES p7_ultima_revision(id_ultima_revision),
+    FOREIGN KEY (id_ampliacion_plazo) REFERENCES p8_ampliacion_plazo(id_ampliacion_plazo),
+    FOREIGN KEY (id_constancia_sustentacion) REFERENCES p9_constancia_sustentacion(id_constancia_sustentacion),
+    FOREIGN KEY (id_fecha_sustentacion) REFERENCES p10_fecha_sustentacion(id_fecha_sustentacion),
+    FOREIGN KEY (id_notificacion_jurados) REFERENCES p11_notificacion_jurados(id_notificacion_jurados),
+    FOREIGN KEY (id_aprobacion_sustentacion) REFERENCES p12_aprobacion_sustentacion(id_aprobacion_sustentacion),
+    FOREIGN KEY (id_constancia_entrega_empastados) REFERENCES p13_constancia_entrega_empastados(id_constancia_entrega_empastados),
+    foreign key (id_docente_carrera) references docente_carrera(id_docente_carrera),
     foreign key (id_alumno_carrera) references alumno_carrera(id_alumno_carrera)
 );
 
 create table informe_progreso(
         id_informe_progreso int primary key auto_increment,
-        id_reserva_titulo int UNIQUE,
-        id_constancia_filtro int UNIQUE,
+        id_anio_planteamiento_tesis int,
         id_aprobacion_tesis int UNIQUE,
         id_designacion_jurados int UNIQUE,
         id_recomposicion_jurados int UNIQUE,
@@ -251,17 +265,16 @@ create table informe_progreso(
         id_notificacion_jurados int UNIQUE,
         id_aprobacion_sustentacion int UNIQUE,
         id_constancia_entrega_empastados int UNIQUE,
-        foreign key (id_reserva_titulo) references reserva_titulo(id_reserva_titulo),
-        foreign key (id_constancia_filtro) references constancia_filtro(id_constancia_filtro),
-        foreign key (id_aprobacion_tesis) references aprobacion_tesis(id_aprobacion_tesis),
-        foreign key (id_designacion_jurados) references designacion_jurados(id_designacion_jurados),
-        foreign key (id_recomposicion_jurados) references recomposicion_jurados(id_recomposicion_jurados),
-        foreign key (id_primera_revision) references primera_revision(id_primera_revision),
-        foreign key (id_ultima_revision) references ultima_revision(id_ultima_revision),
-        foreign key (id_ampliacion_plazo) references ampliacion_plazo(id_ampliacion_plazo),
-        foreign key (id_constancia_sustentacion) references constancia_sustentacion(id_constancia_sustentacion),
-        foreign key (id_fecha_sustentacion) references fecha_sustentacion(id_fecha_sustentacion),
-        foreign key (id_notificacion_jurados) references notificacion_jurados(id_notificacion_jurados),
-        foreign key (id_aprobacion_sustentacion) references aprobacion_sustentacion(id_aprobacion_sustentacion),
-        foreign key (id_constancia_entrega_empastados) references constancia_entrega_empastados(id_constancia_entrega_empastados)
+        foreign key (id_anio_planteamiento_tesis) references anio_planteamiento_tesis(id_anio_planteamiento_tesis),
+        foreign key (id_aprobacion_tesis) references p3_aprobacion_tesis(id_aprobacion_tesis),
+        foreign key (id_designacion_jurados) references p4_designacion_jurados(id_designacion_jurados),
+        foreign key (id_recomposicion_jurados) references p5_recomposicion_jurados(id_recomposicion_jurados),
+        foreign key (id_primera_revision) references p6_primera_revision(id_primera_revision),
+        foreign key (id_ultima_revision) references p7_ultima_revision(id_ultima_revision),
+        foreign key (id_ampliacion_plazo) references p8_ampliacion_plazo(id_ampliacion_plazo),
+        foreign key (id_constancia_sustentacion) references p9_constancia_sustentacion(id_constancia_sustentacion),
+        foreign key (id_fecha_sustentacion) references p10_fecha_sustentacion(id_fecha_sustentacion),
+        foreign key (id_notificacion_jurados) references p11_notificacion_jurados(id_notificacion_jurados),
+        foreign key (id_aprobacion_sustentacion) references p12_aprobacion_sustentacion(id_aprobacion_sustentacion),
+        foreign key (id_constancia_entrega_empastados) references p13_constancia_entrega_empastados(id_constancia_entrega_empastados)
 );
