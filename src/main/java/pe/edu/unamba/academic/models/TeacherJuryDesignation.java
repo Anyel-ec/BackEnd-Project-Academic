@@ -12,13 +12,16 @@ public class TeacherJuryDesignation {
     @Column(name = "id_docente_designacion_jurados")
     private Long id;
 
-    @Column(name = "id_cargo", nullable = false)
-    private Long cargoId;
+    @ManyToOne
+    @JoinColumn(name = "id_cargo")
+    private Position positionId;
 
-    @Column(name = "id_docente", nullable = false)
-    private Long docenteId;
+    @ManyToOne
+    @JoinColumn(name = "id_docente")
+    private Teacher teacherId;
 
-    @Column(name = "id_designacion_jurados", nullable = false)
-    private Long designacionJuradosId;
+    @ManyToOne
+    @JoinColumn(name = "id_designacion_jurados")
+    private JuryDesignationStepFour juryDesignationStepFourId;
 
 }

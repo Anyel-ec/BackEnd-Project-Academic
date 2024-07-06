@@ -11,9 +11,10 @@ import java.time.LocalDate;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_docente")
     private Long id;
 
-    @Column(name = "DNI", nullable = false)
+    @Column(name = "DNI", nullable = false, unique = true, length = 10)
     private int dni;
 
     @Column(name = "nombres", nullable = false, length = 150)

@@ -10,6 +10,7 @@ import lombok.Data;
 public class Position{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cargo")
     private Long id;
 
     @Column(name = "nombre_cargo", nullable = false, length = 50)
