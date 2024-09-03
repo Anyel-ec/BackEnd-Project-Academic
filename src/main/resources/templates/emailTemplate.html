@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #444;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .username, .password {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>¡Bienvenido al proceso para presentar trabajo de titulación!</h1>
+    <p>Estimado/a {{firstName}},</p>
+    <p>Te informamos que has iniciado el proceso con éxito.</p>
+    <p>Tu nombre de usuario para acceder al sistema es: <span class="username">{{username}}</span></p>
+    <p>Tu contraseña temporal es: <span class="password">{{password}}</span></p>
+    <p>Por favor, cambia tu contraseña al ingresar al sistema por primera vez.</p>
+    <p>Saludos cordiales,<br>Equipo Académico</p>
+</div>
+</body>
+</html>
