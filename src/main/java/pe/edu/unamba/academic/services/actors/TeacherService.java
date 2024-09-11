@@ -39,6 +39,7 @@ public class TeacherService {
         teacher.setInstitutionalEmail(teacherDetails.getInstitutionalEmail());
         teacher.setPhone(teacherDetails.getPhone());
         teacher.setAddress(teacherDetails.getAddress());
+        teacher.setCareer(teacherDetails.getCareer());
         return teacherRepository.save(teacher);
     }
 }

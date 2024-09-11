@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "docentes")
 @Data
 public class Teacher {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_docente")
@@ -36,8 +37,8 @@ public class Teacher {
     private String lastName;
 
     @NotBlank
-    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "El apellido materno solo puede contener letras latinoamericanas y espacios.")
     @Length(min = 2, max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "El apellido materno solo puede contener letras latinoamericanas y espacios.")
     @Column(name = "apellido_materno", nullable = false, length = 50)
     private String middleName;
 
@@ -56,9 +57,12 @@ public class Teacher {
     @Column(name = "telefono", nullable = false, length = 9)
     private String phone;
 
-
     @NotBlank
     @Length(min = 2, max = 255)
     @Column(name = "direccion", length = 255)
     private String address;
+
+    @ManyToOne
+    @JoinColumn(name = "id_carrera")
+    private Career career;
 }

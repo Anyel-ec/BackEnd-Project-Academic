@@ -3,6 +3,8 @@ package pe.edu.unamba.academic.models.actors;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Table(name = "carreras")
 @Data
@@ -17,4 +19,5 @@ public class Career {
     @ManyToOne
     @JoinColumn(name = "id_facultad")
     private Faculty faculty;
+
 }
