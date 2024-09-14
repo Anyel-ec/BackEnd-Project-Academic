@@ -1,5 +1,6 @@
 package pe.edu.unamba.academic.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,24 +26,19 @@ import pe.edu.unamba.academic.security.jwt.JwtTokenFilter;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurity {
 
+    @Autowired
+    private PasswordEncoder pswEncoder;
 
-    private final PasswordEncoder pswEncoder;
+    @Autowired
+    private JwtEntryPoint jwtEntryPoint;
 
-    private final JwtEntryPoint jwtEntryPoint;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private AuthenticationManager authenticationManager;
 
-    private final AuthenticationManager authenticationManager;
-
-    private final JwtTokenFilter jwtTokenFilter;
-
-    public WebSecurity(PasswordEncoder pswEncoder, JwtEntryPoint jwtEntryPoint, UserDetailsServiceImpl userDetailsServiceImpl, AuthenticationManager authenticationManager, JwtTokenFilter jwtTokenFilter) {
-        this.pswEncoder = pswEncoder;
-        this.jwtEntryPoint = jwtEntryPoint;
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenFilter = jwtTokenFilter;
-    }
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {

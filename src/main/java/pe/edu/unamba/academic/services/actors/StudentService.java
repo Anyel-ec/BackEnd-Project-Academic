@@ -1,19 +1,17 @@
 package pe.edu.unamba.academic.services.actors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.actors.Student;
 import pe.edu.unamba.academic.repositories.actors.StudentRepository;
-
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class StudentService {
-    private final StudentRepository studentRepository;
-
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    @Autowired
+    private StudentRepository studentRepository;
     // crear log
 
     public List<Student> getAllStudents() {
