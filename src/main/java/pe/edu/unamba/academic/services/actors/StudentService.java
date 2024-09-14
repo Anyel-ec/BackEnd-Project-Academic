@@ -1,19 +1,19 @@
 package pe.edu.unamba.academic.services.actors;
 
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.actors.Student;
 import pe.edu.unamba.academic.repositories.actors.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
     // crear log
 
     public List<Student> getAllStudents() {
@@ -25,7 +25,6 @@ public class StudentService {
     }
 
     public Student saveStudent(Student student) {
-        System.out.println(student);
         return studentRepository.save(student);
     }
 

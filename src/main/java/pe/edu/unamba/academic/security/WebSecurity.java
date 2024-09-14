@@ -1,6 +1,5 @@
 package pe.edu.unamba.academic.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,19 +25,24 @@ import pe.edu.unamba.academic.security.jwt.JwtTokenFilter;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurity {
 
-    @Autowired
-    private PasswordEncoder pswEncoder;
 
-    @Autowired
-    private JwtEntryPoint jwtEntryPoint;
+    private final PasswordEncoder pswEncoder;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private final JwtEntryPoint jwtEntryPoint;
 
-    private AuthenticationManager authenticationManager;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenFilter jwtTokenFilter;
+
+    public WebSecurity(PasswordEncoder pswEncoder, JwtEntryPoint jwtEntryPoint, UserDetailsServiceImpl userDetailsServiceImpl, AuthenticationManager authenticationManager, JwtTokenFilter jwtTokenFilter) {
+        this.pswEncoder = pswEncoder;
+        this.jwtEntryPoint = jwtEntryPoint;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenFilter = jwtTokenFilter;
+    }
 
     @Bean
     public static BCryptPasswordEncoder passwordEncoder() {
@@ -64,7 +68,7 @@ public class WebSecurity {
         AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
         builder.userDetailsService(userDetailsServiceImpl).passwordEncoder(pswEncoder);
         authenticationManager = builder.build();
-        return http.csrf(crsf -> crsf.disable())
+        return http.csrf(AbstractHttpConfigurer::disable)
                 .authenticationManager(authenticationManager)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
