@@ -1,6 +1,5 @@
 package pe.edu.unamba.academic.controller.steps;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
@@ -12,8 +11,12 @@ import java.util.List;
 @RequestMapping("/api/v1/reservas_titulo")
 public class TitleReservationStepOneController {
 
-    @Autowired
-    private TitleReservationStepOneService titleReservationStepOneService;
+
+    private final TitleReservationStepOneService titleReservationStepOneService;
+
+    public TitleReservationStepOneController(TitleReservationStepOneService titleReservationStepOneService) {
+        this.titleReservationStepOneService = titleReservationStepOneService;
+    }
 
     @GetMapping("/")
     public List<TitleReservationStepOne> getAllTitleReservations() {
@@ -45,6 +48,7 @@ public class TitleReservationStepOneController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTitleReservation(@PathVariable Long id) {
         try {
@@ -54,4 +58,6 @@ public class TitleReservationStepOneController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }

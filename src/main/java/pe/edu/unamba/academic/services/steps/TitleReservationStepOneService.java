@@ -47,9 +47,11 @@ public class TitleReservationStepOneService {
         }
         return titleReservationStepOneRepository.save(titleReservation);
     }
-
     public void deleteTitleReservation(Long id) {
-        titleReservationStepOneRepository.deleteById(id);
+        Optional<TitleReservationStepOne> reservation = titleReservationStepOneRepository.findById(id);
+        if (reservation.isPresent()) {
+            titleReservationStepOneRepository.deleteById(id);
+        }
     }
 
     public TitleReservationStepOne updateTitleReservation(Long id, TitleReservationStepOne titleReservationDetails) {

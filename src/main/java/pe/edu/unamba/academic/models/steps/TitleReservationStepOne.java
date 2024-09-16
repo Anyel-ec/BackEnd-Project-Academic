@@ -21,7 +21,7 @@ public class TitleReservationStepOne {
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
     private boolean meetsRequirements = false;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
     private Student student;
 
     @Column(name = "proyecto_tesis", nullable = false)
