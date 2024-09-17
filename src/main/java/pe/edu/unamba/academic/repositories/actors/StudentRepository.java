@@ -6,8 +6,5 @@ import pe.edu.unamba.academic.models.actors.Student;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-
     Student findByStudentCode(String studentCode);
-
-
 }

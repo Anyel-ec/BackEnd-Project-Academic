@@ -24,6 +24,7 @@ public class MailConfig {
         properties.put("mail.transport.protocol", dotenv.get("SPRING_MAIL_PROPERTIES_MAIL_TRANSPORT_PROTOCOL"));
         properties.put("mail.smtp.auth", dotenv.get("SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH"));
         properties.put("mail.smtp.starttls.enable", dotenv.get("SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE"));
+        properties.put("mail.smtp.ssl.trust", dotenv.get("SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST"));
 
         return mailSender;
     }

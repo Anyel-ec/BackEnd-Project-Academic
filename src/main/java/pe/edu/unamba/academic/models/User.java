@@ -37,9 +37,8 @@ public class User {
     @Column(name = "estado", nullable = false, columnDefinition = "boolean default true")
     private Boolean state;
 
-    @Column(name = "primer_login", nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "primer_login", nullable = true, columnDefinition = "boolean default false")
     private Boolean firstLogin;
-
 
 
     @ManyToOne

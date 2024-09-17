@@ -66,7 +66,7 @@ public class Student {
     private String address;
 
     @Column(name = "sexo", nullable = false, columnDefinition = "boolean default false")
-    private boolean gender = false;  // Inicializar con el valor por defecto
+    private boolean gender = false;
 
     @ManyToOne
     @JoinColumn(name = "id_carrera")

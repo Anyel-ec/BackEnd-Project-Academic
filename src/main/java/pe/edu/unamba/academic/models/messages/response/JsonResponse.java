@@ -1,8 +1,6 @@
 package pe.edu.unamba.academic.models.messages.response;
 
-
 import org.springframework.http.HttpStatus;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Schema(name = "JsonResponse", description = "Modelo de respuesta predeterminado")
 @Data
 @NoArgsConstructor
-
 public class JsonResponse {
 
     private Boolean respuesta;
@@ -18,6 +15,7 @@ public class JsonResponse {
     private String mensaje;
     private Object resultado;
 
+    // Constructores
     public JsonResponse(Boolean respuesta, Object resultado) {
         this.respuesta = respuesta;
         this.resultado = resultado;
@@ -53,6 +51,19 @@ public class JsonResponse {
         this.resultado = resultado;
     }
 
+    // Método isSuccess: devolverá el valor de "respuesta"
+    public boolean isSuccess() {
+        return this.respuesta != null && this.respuesta;
+    }
 
+    // Método getMessage: devolverá el valor de "mensaje"
+    public String getMessage() {
+        return this.mensaje;
+    }
 
+    public boolean isPresent() {
+        // TODO document why this method is empty
+            return this.respuesta != null && this.respuesta;
+
+    }
 }

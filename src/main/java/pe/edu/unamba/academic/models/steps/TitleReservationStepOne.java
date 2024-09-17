@@ -22,6 +22,7 @@ public class TitleReservationStepOne {
     private boolean meetsRequirements = false;
 
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
+    @JoinColumn(name = "id_student")
     private Student student;
 
     @Column(name = "proyecto_tesis", nullable = false)
