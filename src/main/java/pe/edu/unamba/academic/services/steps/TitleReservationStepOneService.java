@@ -1,20 +1,21 @@
 package pe.edu.unamba.academic.services.steps;
 
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.User;
+import pe.edu.unamba.academic.models.actors.Rol;
 import pe.edu.unamba.academic.models.actors.Student;
 import pe.edu.unamba.academic.models.messages.response.JsonResponse;
 import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
 import pe.edu.unamba.academic.repositories.actors.StudentRepository;
 import pe.edu.unamba.academic.repositories.steps.TitleReservationStepOneRepository;
-import pe.edu.unamba.academic.security.jwt.JwtTokenFilter;
 import pe.edu.unamba.academic.services.EmailService;
 import pe.edu.unamba.academic.services.UserService;
+import pe.edu.unamba.academic.services.actors.RolService;
+import java.security.SecureRandom;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,12 @@ import java.util.Optional;
 public class TitleReservationStepOneService {
 
     private final TitleReservationStepOneRepository titleReservationStepOneRepository;
+    private final RolService rolService;
     private final StudentRepository studentRepository;
-    private final UserService userService; // Inyección del UserService para manejar la creación de usuarios
+        private final UserService userService; // Inyección del UserService para manejar la creación de usuarios
     private final EmailService emailService;
     private static final Logger LOG = LoggerFactory.getLogger(TitleReservationStepOneService.class);
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Obtiene todas las reservaciones de título del paso uno.
@@ -58,6 +61,7 @@ public class TitleReservationStepOneService {
      * @return La reservación guardada o null si hubo un error.
      */
 
+
     public TitleReservationStepOne saveTitleReservation(TitleReservationStepOne titleReservation) {
         try {
             // Asegurarse de que se envía un estudiante con ID
@@ -73,35 +77,47 @@ public class TitleReservationStepOneService {
                     // Asignar el estudiante completo a la reserva
                     titleReservation.setStudent(student);
 
-                    // Verificar si el estudiante tiene correo electrónico
-                    String studentEmail = student.getEmail();
-                    if (studentEmail == null || studentEmail.isEmpty()) {
-                        LOG.error("El estudiante con ID {} no tiene un correo electrónico asignado.", studentId);
-                        return null; // Detener el proceso si el estudiante no tiene correo
+                    // Verificar si el código del estudiante está disponible
+                    String studentCode = student.getStudentCode();
+                    if (studentCode == null || studentCode.isEmpty()) {
+                        LOG.error("El estudiante con ID {} no tiene un código asignado.", studentId);
+                        return null; // Detener el proceso si el estudiante no tiene código
                     }
 
-                    // Verificar si el usuario ya existe
-                    JsonResponse existingUser = userService.getUserByUsername(studentEmail);
+                    // Verificar si el usuario ya existe usando el código de estudiante como username
+                    JsonResponse existingUser = userService.getUserByUsername(studentCode);
                     if (!existingUser.isPresent()) {
                         // Si el usuario no existe, creamos uno nuevo
                         User newUser = new User();
-                        newUser.setUsername(studentEmail);  // Usamos el correo como nombre de usuario
+                        newUser.setUsername(studentCode);  // Usamos el código de estudiante como nombre de usuario
                         newUser.setFirstName(student.getFirstNames());
                         newUser.setLastName(student.getLastName());
-                        newUser.setEmail(studentEmail);
-                        newUser.setPassword("123456"); // Establecer una contraseña por defecto, cambiar luego
-                        // Asignar un rol por defecto si es necesario (por ejemplo, ROLE_STUDENT)
-                        // newUser.setRol(defaultRole);
+                        newUser.setEmail(student.getEmail());
+
+                        // Generar contraseña aleatoria
+                        String randomPassword = generateRandomPassword(8); // Genera una contraseña de 8 caracteres
+                        newUser.setPassword(passwordEncoder.encode(randomPassword));
                         newUser.setState(true);  // Estado activo
 
-                        // Guardar el nuevo usuario
-                        userService.saveUser(newUser);
-                        LOG.info("Los datos paar el envio del correo son: {}", student.getEmail());
-                        emailService.sendEmail(student.getEmail(), "REGISTRO", student.getFirstNames(), studentEmail, newUser.getPassword());
+                        // Asignar el rol por defecto (ID=2, estudiante)
+                        Rol studentRole = rolService.getRolById(2).orElseThrow(() ->
+                                new IllegalArgumentException("Rol de estudiante no encontrado."));
+                        newUser.setRol(studentRole); // Asigna el rol directamente
 
-                        LOG.info("Nuevo usuario creado para el estudiante con ID {}: {}", student.getId(), studentEmail);
+                        // Asignar la unidad de investigación por defecto (ID=1)
+
+                        // Establecer el primer login como 1 por defecto
+                        newUser.setFirstLogin(true); // Configurar que sea el primer login
+
+                        // Guardar el nuevo usuario
+                        emailService.sendEmail(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
+
+                        userService.saveUser(newUser);
+                        LOG.info("Los datos para el envío del correo son: {}", student.getEmail());
+
+                        LOG.info("Nuevo usuario creado para el estudiante con ID {}: {}", student.getId(), studentCode);
                     } else {
-                        LOG.info("El usuario ya existe para el estudiante con ID {}: {}", student.getId(), studentEmail);
+                        LOG.info("El usuario ya existe para el estudiante con ID {}: {}", student.getId(), studentCode);
                     }
 
                     // Guardar la reservación de título con el estudiante completo
@@ -120,6 +136,22 @@ public class TitleReservationStepOneService {
             return null; // Manejar cualquier excepción
         }
     }
+
+    // Método para generar una contraseña aleatoria
+    private String generateRandomPassword(int length) {
+        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(allowedChars.length());
+            password.append(allowedChars.charAt(index));
+        }
+
+        return password.toString();
+    }
+
+
 
     /**
      * Elimina una reservación de título por su ID.
@@ -156,4 +188,6 @@ public class TitleReservationStepOneService {
             return null;
         }
     }
+
+
 }

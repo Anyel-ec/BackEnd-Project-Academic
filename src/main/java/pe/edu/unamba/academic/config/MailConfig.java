@@ -35,10 +35,6 @@ public class MailConfig {
         mailSender.setPort(Integer.parseInt(dotenv.get("SPRING_MAIL_PORT")));
         mailSender.setUsername(dotenv.get("SPRING_MAIL_USERNAME"));
         mailSender.setPassword(dotenv.get("SPRING_MAIL_PASSWORD"));
-        System.out.println(mailSender.getHost());
-        System.out.println(mailSender.getPort());
-        System.out.println(mailSender.getUsername());
-        System.out.println(mailSender.getPassword());
     }
 }
 

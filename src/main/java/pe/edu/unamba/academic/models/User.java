@@ -32,14 +32,12 @@ public class User {
     @JoinColumn(name = "id_rol")
     private Rol rol;
 
-
     // 1: activo, 0: inactivo
     @Column(name = "estado", nullable = false, columnDefinition = "boolean default true")
     private Boolean state;
 
     @Column(name = "primer_login", nullable = true, columnDefinition = "boolean default false")
     private Boolean firstLogin;
-
 
     @ManyToOne
     @JoinColumn(name = "id_unidad_investigacion")
