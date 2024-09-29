@@ -13,6 +13,4 @@ public class Rol {
 
     @Column(name = "nombre", nullable = false, length = 50)
     private String name;
-
-
 }
