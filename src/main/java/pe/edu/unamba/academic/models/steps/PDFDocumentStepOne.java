@@ -16,7 +16,7 @@ public class PDFDocumentStepOne {
     private Long id;
 
     // Almacena el PDF en formato Base64 (texto)
-    @Column(name = "pdf_data", columnDefinition = "TEXT")
+    @Column(name = "pdf_data", columnDefinition = "LONGTEXT")
     private String pdfData;
 
     // Creado en, con marca de tiempo automática

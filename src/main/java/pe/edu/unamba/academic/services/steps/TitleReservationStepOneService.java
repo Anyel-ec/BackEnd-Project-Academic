@@ -150,7 +150,11 @@ public class TitleReservationStepOneService {
             return titleReservationStepOneRepository.save(existingReservation);
         }).orElse(null);
     }
-
+    // Método para eliminar la referencia al documento PDF dentro de una reservación de título
+    public void removePDFDocumentFromReservation(TitleReservationStepOne titleReservation) {
+        titleReservation.setPdfDocument(null);  // Eliminar la referencia al documento PDF
+        titleReservationStepOneRepository.save(titleReservation);  // Guardar la actualización en la base de datos
+    }
     // Método para generar una contraseña aleatoria
     private String generateRandomPassword(int length) {
         String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
