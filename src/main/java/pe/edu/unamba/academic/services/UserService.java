@@ -52,7 +52,7 @@ public class UserService {
         Optional<User> user;
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            LOG.info("Username " + username);
+            LOG.info("Username {}",  username);
             user = userRepository.findByUsernameAndStateTrue(username);
             if (!user.isPresent()) {
                 return new JsonResponse(false, HttpStatus.UNAUTHORIZED.value(),"inhautorized");

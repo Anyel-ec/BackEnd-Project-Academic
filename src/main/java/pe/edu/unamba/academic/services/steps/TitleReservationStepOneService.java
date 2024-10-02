@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.User;
-import pe.edu.unamba.academic.models.actors.Rol;
 import pe.edu.unamba.academic.models.actors.Student;
 import pe.edu.unamba.academic.models.messages.response.JsonResponse;
 import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
@@ -62,9 +63,16 @@ public class TitleReservationStepOneService {
                     handleStudentUser(student);
 
                     // Manejar segundo estudiante, si existe
-                    if (titleReservation.getStudentTwo() != null) {
-                        Optional<Student> studentTwoOpt = studentRepository.findById(titleReservation.getStudentTwo().getId());
-                        studentTwoOpt.ifPresent(titleReservation::setStudentTwo);
+                    if (titleReservation.getStudentTwo() != null && titleReservation.getStudentTwo().getId() != null) {
+                        Long studentTwoId = titleReservation.getStudentTwo().getId();
+                        Optional<Student> studentTwoOpt = studentRepository.findById(studentTwoId);
+                        if (studentTwoOpt.isPresent()) {
+                            Student studentTwo = studentTwoOpt.get();
+                            titleReservation.setStudentTwo(studentTwo);
+                            handleStudentUser(studentTwo);  // Asegurar que se maneje el usuario para el segundo estudiante
+                        } else {
+                            LOG.error("Segundo estudiante no encontrado con ID: {}", studentTwoId);
+                        }
                     }
 
                     // Guardar la reservación
@@ -86,12 +94,14 @@ public class TitleReservationStepOneService {
     // Manejo del usuario para un estudiante
     @Transactional
     protected void handleStudentUser(Student student) {
+        LOG.info("Iniciando manejo de usuario para el estudiante con código: {}", student.getStudentCode());
         try {
             String studentCode = student.getStudentCode();
             if (studentCode != null && !studentCode.isEmpty()) {
                 JsonResponse existingUser = userService.getUserByUsername(studentCode);
 
                 if (!existingUser.isPresent()) {
+                    LOG.info("No existe un usuario para el estudiante con código {}, procediendo a crear uno.", studentCode);
                     createUserForStudent(student);
                 } else {
                     LOG.info("El usuario ya existe para el estudiante con código: {}", studentCode);
@@ -102,6 +112,7 @@ public class TitleReservationStepOneService {
         } catch (Exception e) {
             LOG.error("Error al manejar el usuario del estudiante: {}", e.getMessage());
         }
+        LOG.info("Finalizado manejo de usuario para el estudiante con código: {}", student.getStudentCode());
     }
 
     // Método para crear un nuevo usuario para un estudiante
@@ -125,9 +136,13 @@ public class TitleReservationStepOneService {
 
             userService.saveUser(newUser);
             LOG.info("Usuario creado para el estudiante con código: {}", studentCode);
-        } catch (Exception e) {
-            LOG.error("Error al crear usuario para el estudiante: {}", e.getMessage());
-        }
+        }  catch (DataAccessException e) {  // Esta excepción es más específica para errores de base de datos
+        LOG.error("Error de acceso a base de datos al crear usuario para el estudiante: {}", e.getMessage());
+    } catch (MailException e) {  // Excepción para errores al enviar emails
+        LOG.error("Error al enviar email al estudiante: {}", e.getMessage());
+    } catch (Exception e) {  // Captura genérica como último recurso
+        LOG.error("Error general al crear usuario para el estudiante: {}", e.getMessage());
+    }
     }
 
     public boolean deleteTitleReservation(Long id) {
