@@ -131,19 +131,20 @@ public class TitleReservationStepOneService {
             newUser.setState(true);
             newUser.setRol(rolService.getRolById(2).orElseThrow(() -> new IllegalArgumentException("Rol no encontrado")));
 
-            // Enviar credenciales por email
+            LOG.info("Intentando enviar email a {}, con código de usuario {}", student.getEmail(), studentCode);
             emailService.sendEmail(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
 
             userService.saveUser(newUser);
-            LOG.info("Usuario creado para el estudiante con código: {}", studentCode);
-        }  catch (DataAccessException e) {  // Esta excepción es más específica para errores de base de datos
-        LOG.error("Error de acceso a base de datos al crear usuario para el estudiante: {}", e.getMessage());
-    } catch (MailException e) {  // Excepción para errores al enviar emails
-        LOG.error("Error al enviar email al estudiante: {}", e.getMessage());
-    } catch (Exception e) {  // Captura genérica como último recurso
-        LOG.error("Error general al crear usuario para el estudiante: {}", e.getMessage());
+            LOG.info("Usuario creado y email enviado para el estudiante con código: {}", studentCode);
+        } catch (DataAccessException e) {
+            LOG.error("Error de acceso a base de datos al crear usuario para el estudiante: {}", e.getMessage());
+        } catch (MailException e) {
+            LOG.error("Error al enviar email al estudiante: {}", e.getMessage());
+        } catch (Exception e) {
+            LOG.error("Error general al crear usuario para el estudiante: {}", e.getMessage());
+        }
     }
-    }
+
 
     public boolean deleteTitleReservation(Long id) {
         Optional<TitleReservationStepOne> reservationOpt = titleReservationStepOneRepository.findById(id);
@@ -172,7 +173,7 @@ public class TitleReservationStepOneService {
     }
     // Método para generar una contraseña aleatoria
     private String generateRandomPassword(int length) {
-        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(length);
 

@@ -3,7 +3,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Text;
 import pe.edu.unamba.academic.models.actors.Student;
 import java.sql.Timestamp;
 
@@ -19,7 +18,7 @@ public class TitleReservationStepOne {
     @Column(name = "id_reserva_titulo")
     private Long id;
 
-
+    
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
     private boolean meetsRequirements = false;
 
