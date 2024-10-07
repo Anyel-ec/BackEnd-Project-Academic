@@ -22,8 +22,7 @@ VALUES
 (4, 'Ingeniería Civil', 1),
 (5, 'Arquitectura', 1),
 (6, 'Derecho', 1),
-(7, 'Medicina', 1),
-(8, 'Enfermería', 1);
+(7, 'Medicina', 1);
 
 
 INSERT INTO usuarios (
