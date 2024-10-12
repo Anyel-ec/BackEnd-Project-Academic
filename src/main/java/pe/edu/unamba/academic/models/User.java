@@ -28,7 +28,7 @@ public class User {
     @Column(name = "contrasena_usuario", nullable = false, length = 150)
     private String password;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_rol")
     private Rol rol;
 

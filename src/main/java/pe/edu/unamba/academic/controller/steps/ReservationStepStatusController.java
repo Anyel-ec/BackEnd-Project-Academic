@@ -9,7 +9,7 @@ import pe.edu.unamba.academic.services.steps.ReservationStepStatusService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/steps")
+@RequestMapping("/api/v1/stepStatus")
 public class ReservationStepStatusController {
 
     @Autowired

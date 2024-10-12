@@ -67,7 +67,7 @@ public class Student {
 
     @Column(name = "sexo", nullable = false, columnDefinition = "boolean default false")
     private boolean gender = false;
-
+    
     @ManyToOne
     @JoinColumn(name = "id_carrera")
     private Career career;

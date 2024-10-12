@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import pe.edu.unamba.academic.models.actors.LineResearch;
 import pe.edu.unamba.academic.models.actors.Student;
 import java.sql.Timestamp;
 
@@ -39,6 +40,10 @@ public class TitleReservationStepOne {
     @ManyToOne
     @JoinColumn(name = "pdf_document_id")
     private PDFDocumentStepOne pdfDocument;
+
+    @ManyToOne
+    @JoinColumn(name = "line_of_research_id", nullable = true)
+    private LineResearch lineOfResearch;
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)

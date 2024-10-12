@@ -75,6 +75,14 @@ public class TitleReservationStepOneService {
                         }
                     }
 
+                    // Validar la línea de investigación (LineResearch)
+                    if (titleReservation.getLineOfResearch() != null && titleReservation.getLineOfResearch().getId() != null) {
+                        LOG.info("Asignando línea de investigación con ID: {}", titleReservation.getLineOfResearch().getId());
+                    } else {
+                        LOG.warn("No se encontró una línea de investigación válida, no se asignará.");
+                        titleReservation.setLineOfResearch(null);  // No asignar ninguna línea de investigación si no es válida
+                    }
+
                     // Guardar la reservación
                     return titleReservationStepOneRepository.save(titleReservation);
                 } else {
@@ -90,6 +98,7 @@ public class TitleReservationStepOneService {
             return null;
         }
     }
+
 
     // Manejo del usuario para un estudiante
     @Transactional
@@ -158,14 +167,26 @@ public class TitleReservationStepOneService {
         }
     }
 
+    @Transactional
     public TitleReservationStepOne updateTitleReservation(Long id, TitleReservationStepOne titleReservationDetails) {
         return titleReservationStepOneRepository.findById(id).map(existingReservation -> {
+            // Actualizar campos relevantes
             existingReservation.setMeetsRequirements(titleReservationDetails.isMeetsRequirements());
             existingReservation.setObservations(titleReservationDetails.getObservations());
-            LOG.info("Reservación con ID {} actualizada.", id);
+
+            if (titleReservationDetails.getLineOfResearch() != null && titleReservationDetails.getLineOfResearch().getId() != null) {
+                existingReservation.setLineOfResearch(titleReservationDetails.getLineOfResearch());
+            } else {
+                existingReservation.setLineOfResearch(null); // Eliminar la línea de investigación si no se proporciona
+            }
+
+            // Guardar cambios y devolver la entidad actualizada
             return titleReservationStepOneRepository.save(existingReservation);
         }).orElse(null);
     }
+
+
+
     // Método para eliminar la referencia al documento PDF dentro de una reservación de título
     public void removePDFDocumentFromReservation(TitleReservationStepOne titleReservation) {
         titleReservation.setPdfDocument(null);  // Eliminar la referencia al documento PDF

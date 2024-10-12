@@ -2,12 +2,15 @@ package pe.edu.unamba.academic.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.core.util.Json;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.PasswordUpdateRequest;
@@ -56,12 +59,11 @@ public class UserController {
         return authService.createUserLogin(user);
     }
 
-
-
     @PostMapping("/actualizar-contrasena/{username}")
     public JsonResponse updatePassword(@PathVariable String username, @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         String newPassword = passwordUpdateRequest.getPassword();
-        LOG.info("username: " + username + " password: " + newPassword);
+        LOG.info("La contraseña del usuario {} ha sido actualizada exitosamente.", username );
+
         if (username == null || newPassword == null) {
 
             return new JsonResponse(false, HttpStatus.BAD_REQUEST.value(), "Datos incorrectos");
@@ -94,10 +96,15 @@ public class UserController {
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         try {
             return ResponseEntity.ok().body(userService.saveUser(user));
+        } catch (DataIntegrityViolationException e) {
+            LOG.error("Error al guardar el usuario: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            LOG.error("Error inesperado al guardar el usuario: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
@@ -113,8 +120,14 @@ public class UserController {
         try {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .header("Message", "El usuario con ID " + id + " no existe.")
+                    .build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            LOG.error("Error al eliminar el usuario: {} ", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

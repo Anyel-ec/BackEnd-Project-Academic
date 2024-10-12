@@ -14,4 +14,7 @@ public class LineResearch {
     @Column(name = "nombre_linea_investigacion", nullable = false, length = 50)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "id_carrera", nullable = false)
+    private Career career;
 }
