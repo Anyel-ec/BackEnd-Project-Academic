@@ -47,9 +47,31 @@ public class TitleReservationStepOneService {
         return titleReservationStepOneRepository.findById(id);
     }
 
+    public boolean isTitleDuplicate(String title) {
+        return titleReservationStepOneRepository.existsByTitle(title);  // Uso del método existsByTitle
+    }
+    public boolean existsByTitle(String title) {
+        return titleReservationStepOneRepository.existsByTitle(title);
+    }
     @Transactional
     public TitleReservationStepOne saveTitleReservation(TitleReservationStepOne titleReservation) {
         try {
+            // Validar si el campo 'cumple requisitos' es verdadero y el título es nulo o vacío
+            if (titleReservation.isMeetsRequirements() && (titleReservation.getTitle() == null || titleReservation.getTitle().trim().isEmpty())) {
+                throw new IllegalArgumentException("El título es obligatorio cuando se selecciona 'Sí' en cumple requisitos.");
+            }
+            if (titleReservationStepOneRepository.existsByTitle(titleReservation.getTitle())) {
+                throw new IllegalStateException("El título ya existe");
+            }
+
+            // Verificar si ya existe una reserva con el mismo título si cumple requisitos
+            if (titleReservation.isMeetsRequirements()) {
+                Optional<TitleReservationStepOne> existingReservation = titleReservationStepOneRepository.findByTitle(titleReservation.getTitle());
+                if (existingReservation.isPresent()) {
+                    throw new IllegalArgumentException("Ya existe una reserva con este título.");
+                }
+            }
+
             // Validar y asignar el estudiante a la reservación
             if (titleReservation.getStudent() != null && titleReservation.getStudent().getId() != null) {
                 Long studentId = titleReservation.getStudent().getId();
@@ -93,12 +115,14 @@ public class TitleReservationStepOneService {
                 LOG.error("Datos de estudiante no válidos en la reservación.");
                 return null;
             }
+        } catch (IllegalArgumentException e) {
+            LOG.error("Error de validación: {}", e.getMessage());
+            throw e;
         } catch (Exception e) {
             LOG.error("Error al guardar la reservación: {}", e.getMessage());
             return null;
         }
     }
-
 
     // Manejo del usuario para un estudiante
     @Transactional
@@ -170,21 +194,21 @@ public class TitleReservationStepOneService {
     @Transactional
     public TitleReservationStepOne updateTitleReservation(Long id, TitleReservationStepOne titleReservationDetails) {
         return titleReservationStepOneRepository.findById(id).map(existingReservation -> {
-            // Actualizar campos relevantes
-            existingReservation.setMeetsRequirements(titleReservationDetails.isMeetsRequirements());
-            existingReservation.setObservations(titleReservationDetails.getObservations());
-
-            if (titleReservationDetails.getLineOfResearch() != null && titleReservationDetails.getLineOfResearch().getId() != null) {
-                existingReservation.setLineOfResearch(titleReservationDetails.getLineOfResearch());
-            } else {
-                existingReservation.setLineOfResearch(null); // Eliminar la línea de investigación si no se proporciona
+            // Verificar si ya existe otra reserva con el mismo título (exceptuando la actual)
+            Optional<TitleReservationStepOne> conflictingReservation = titleReservationStepOneRepository.findByTitle(titleReservationDetails.getTitle());
+            if (conflictingReservation.isPresent() && !conflictingReservation.get().getId().equals(id)) {
+                throw new IllegalArgumentException("Ya existe una reserva con este título.");
             }
 
-            // Guardar cambios y devolver la entidad actualizada
+            // Actualizar la reservación
+            existingReservation.setMeetsRequirements(titleReservationDetails.isMeetsRequirements());
+            existingReservation.setObservations(titleReservationDetails.getObservations());
+            existingReservation.setTitle(titleReservationDetails.getTitle());
+            existingReservation.setLineOfResearch(titleReservationDetails.getLineOfResearch());
+
             return titleReservationStepOneRepository.save(existingReservation);
         }).orElse(null);
     }
-
 
 
     // Método para eliminar la referencia al documento PDF dentro de una reservación de título
@@ -204,4 +228,6 @@ public class TitleReservationStepOneService {
 
         return password.toString();
     }
+
+
 }
