@@ -47,31 +47,9 @@ public class TitleReservationStepOneService {
         return titleReservationStepOneRepository.findById(id);
     }
 
-    public boolean isTitleDuplicate(String title) {
-        return titleReservationStepOneRepository.existsByTitle(title);  // Uso del método existsByTitle
-    }
-    public boolean existsByTitle(String title) {
-        return titleReservationStepOneRepository.existsByTitle(title);
-    }
     @Transactional
     public TitleReservationStepOne saveTitleReservation(TitleReservationStepOne titleReservation) {
         try {
-            // Validar si el campo 'cumple requisitos' es verdadero y el título es nulo o vacío
-            if (titleReservation.isMeetsRequirements() && (titleReservation.getTitle() == null || titleReservation.getTitle().trim().isEmpty())) {
-                throw new IllegalArgumentException("El título es obligatorio cuando se selecciona 'Sí' en cumple requisitos.");
-            }
-            if (titleReservationStepOneRepository.existsByTitle(titleReservation.getTitle())) {
-                throw new IllegalStateException("El título ya existe");
-            }
-
-            // Verificar si ya existe una reserva con el mismo título si cumple requisitos
-            if (titleReservation.isMeetsRequirements()) {
-                Optional<TitleReservationStepOne> existingReservation = titleReservationStepOneRepository.findByTitle(titleReservation.getTitle());
-                if (existingReservation.isPresent()) {
-                    throw new IllegalArgumentException("Ya existe una reserva con este título.");
-                }
-            }
-
             // Validar y asignar el estudiante a la reservación
             if (titleReservation.getStudent() != null && titleReservation.getStudent().getId() != null) {
                 Long studentId = titleReservation.getStudent().getId();

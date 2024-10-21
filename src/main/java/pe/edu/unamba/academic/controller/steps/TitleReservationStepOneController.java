@@ -1,5 +1,6 @@
 package pe.edu.unamba.academic.controller.steps;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,8 @@ public class TitleReservationStepOneController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> saveTitleReservation(@RequestBody TitleReservationStepOne titleReservation) {
+    public ResponseEntity<?> saveTitleReservation(@Valid @RequestBody TitleReservationStepOne titleReservation) {
         try {
-            if (titleReservationStepOneService.isTitleDuplicate(titleReservation.getTitle())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("El título ya existe. Por favor elige otro.");
-            }
-
             TitleReservationStepOne savedReservation = titleReservationStepOneService.saveTitleReservation(titleReservation);
             return ResponseEntity.ok(savedReservation);
         } catch (Exception e) {
@@ -62,13 +59,5 @@ public class TitleReservationStepOneController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-    }
-    @GetMapping("/check-title")
-    public ResponseEntity<?> checkTitleExists(@RequestParam String title) {
-        boolean exists = titleReservationStepOneService.existsByTitle(title);
-        if (exists) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("El título ya existe.");
-        }
-        return ResponseEntity.ok().build();
     }
 }

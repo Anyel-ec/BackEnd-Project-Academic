@@ -1,6 +1,7 @@
 package pe.edu.unamba.academic.models.steps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.actors.LineResearch;
