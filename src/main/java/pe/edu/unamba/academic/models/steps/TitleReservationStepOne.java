@@ -1,7 +1,6 @@
 package pe.edu.unamba.academic.models.steps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.actors.LineResearch;
@@ -20,7 +19,7 @@ public class TitleReservationStepOne {
     @Column(name = "id_reserva_titulo")
     private Long id;
 
-    
+
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
     private boolean meetsRequirements = false;
 
@@ -41,7 +40,7 @@ public class TitleReservationStepOne {
     @Column(name = "titulo", unique = true)
     private String title;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "pdf_document_id")
     private PDFDocumentStepOne pdfDocument;
 

@@ -41,6 +41,12 @@ public class TitleReservationStepOneService {
         LOG.info("Obteniendo todas las reservaciones de título.");
         return titleReservationStepOneRepository.findAll();
     }
+    public boolean checkIfPDFExists(Long reservationId) {
+        return titleReservationStepOneRepository.findById(reservationId)
+                .map(TitleReservationStepOne::getPdfDocument)
+                .isPresent();
+    }
+
 
     public Optional<TitleReservationStepOne> getTitleReservationById(Long id) {
         LOG.info("Buscando reservación de título con ID: {}", id);
@@ -140,6 +146,7 @@ public class TitleReservationStepOneService {
             newUser.setLastName(student.getLastName());
             newUser.setEmail(student.getEmail());
             newUser.setState(true);
+            newUser.setFirstLogin(true);
             newUser.setRol(rolService.getRolById(2).orElseThrow(() -> new IllegalArgumentException("Rol no encontrado")));
 
             LOG.info("Intentando enviar email a {}, con código de usuario {}", student.getEmail(), studentCode);

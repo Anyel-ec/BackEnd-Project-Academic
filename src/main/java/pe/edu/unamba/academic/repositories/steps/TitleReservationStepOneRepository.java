@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface TitleReservationStepOneRepository extends JpaRepository<TitleReservationStepOne, Long> {
     Optional<TitleReservationStepOne> findByStudent_StudentCode(String studentCode);
-
+    Optional<TitleReservationStepOne> findByPdfDocument_Id(Long pdfDocumentId);
     // Añadir este método para buscar una reservación por título
     Optional<TitleReservationStepOne> findByTitle(String title);
 

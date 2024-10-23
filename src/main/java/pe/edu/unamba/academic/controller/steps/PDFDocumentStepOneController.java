@@ -52,6 +52,12 @@ public class PDFDocumentStepOneController {
         }
     }
 
+    @GetMapping("/{id}/exists")
+    public ResponseEntity<?> checkPDFExists(@PathVariable Long id) {
+        boolean exists = titleReservationStepOneService.checkIfPDFExists(id);
+        return ResponseEntity.ok(Map.of("exists", exists));
+    }
+
 
     @GetMapping("/{id}/view")
     public ResponseEntity<Map<String, Object>> viewPDFDocument(@PathVariable Long id) {

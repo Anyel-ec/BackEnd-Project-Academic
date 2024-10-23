@@ -50,7 +50,6 @@ public class TitleReservationStepOneController {
         }
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTitleReservation(@PathVariable Long id) {
         try {
