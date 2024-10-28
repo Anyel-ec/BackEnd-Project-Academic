@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.actors.LineResearch;
 import pe.edu.unamba.academic.models.actors.Student;
+
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -18,7 +20,6 @@ public class TitleReservationStepOne {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reserva_titulo")
     private Long id;
-
 
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
     private boolean meetsRequirements = false;
@@ -41,12 +42,16 @@ public class TitleReservationStepOne {
     private String title;
 
     @OneToOne
-    @JoinColumn(name = "pdf_document_id")
+    @JoinColumn(name = "id_documento_pdf")
     private PDFDocumentStepOne pdfDocument;
 
     @ManyToOne
-    @JoinColumn(name = "line_of_research_id", nullable = true)
+    @JoinColumn(name = "id_linea_de_reserva", nullable = true)
     private LineResearch lineOfResearch;
+
+    @Column(name = "similitud_de_proyecto", columnDefinition = "BIG DECIMAL")
+    private BigDecimal projectSimilarity;
+
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
 
 import java.time.LocalDate;
 
@@ -65,4 +66,9 @@ public class Teacher {
     @ManyToOne
     @JoinColumn(name = "id_carrera")
     private Career career;
+
+    @ManyToOne
+    @JoinColumn(name = "id_aprobacion_proyecto")
+    private ProjectApprovalStepTwo projectApprovalStepTwo;
+
 }
