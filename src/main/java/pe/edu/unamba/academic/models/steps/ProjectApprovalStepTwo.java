@@ -23,7 +23,7 @@ public class ProjectApprovalStepTwo {
     private TitleReservationStepOne titleReservationStepOne;
 
     @OneToMany
-    @JoinColumn(name = "asesor")
+    @Column(name = "asesor")
     private List<Teacher> adviser;
 
     @Column(name = "eliminado")

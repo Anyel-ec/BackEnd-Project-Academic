@@ -10,7 +10,7 @@ import pe.edu.unamba.academic.services.actors.TeacherService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/docentes")
+    @RequestMapping("/api/v1/docentes")
 public class TeacherController {
 
     @Autowired
@@ -35,6 +35,10 @@ public class TeacherController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+    @GetMapping("/carrera/{careerId}")
+    public List<Teacher> getTeachersByCareer(@PathVariable Long careerId) {
+        return teacherService.findTeachersByCareerId(careerId);
     }
 
     @PutMapping("/{id}")

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.unamba.academic.models.actors.Teacher;
 import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
 import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
+import pe.edu.unamba.academic.services.actors.TeacherService;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class ProjectApprovalStepTwoController {
 
     @Autowired
+    private TeacherService teacherService;
     private ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
 
     // Obtener todas las aprobaciones de proyectos
@@ -30,6 +33,7 @@ public class ProjectApprovalStepTwoController {
         Optional<ProjectApprovalStepTwo> approval = projectApprovalStepTwoRepository.findById(id);
         return approval.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     // Crear una nueva aprobación de proyecto
     @PostMapping

@@ -42,4 +42,7 @@ public class TeacherService {
         teacher.setCareer(teacherDetails.getCareer());
         return teacherRepository.save(teacher);
     }
+    public List<Teacher> findTeachersByCareerId(Long careerId) {
+        return teacherRepository.findByCareerId(careerId);
+    }
 }
