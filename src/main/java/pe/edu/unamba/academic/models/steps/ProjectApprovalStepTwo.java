@@ -1,16 +1,14 @@
 package pe.edu.unamba.academic.models.steps;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.actors.Teacher;
-
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "p1_reserva_titulo")
+@Table(name = "p2_aprobacion_proyecto")
 @Data
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
@@ -21,11 +19,12 @@ public class ProjectApprovalStepTwo {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "reserva_titulo", referencedColumnName = "id_reserva_titulo")
+    @JoinColumn(name = "reservacion_titulo", referencedColumnName = "id_reservacion_titulo")
     private TitleReservationStepOne titleReservationStepOne;
 
-    @OneToMany(mappedBy = "projectApprovalStepTwo") // Nombre del campo en Teacher
-    private List<Teacher> advisers;
+    @OneToMany
+    @JoinColumn(name = "asesor")
+    private List<Teacher> adviser;
 
     @Column(name = "eliminado")
     private boolean isDisable;

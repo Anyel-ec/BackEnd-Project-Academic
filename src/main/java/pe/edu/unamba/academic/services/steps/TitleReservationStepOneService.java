@@ -19,6 +19,7 @@ import pe.edu.unamba.academic.services.EmailService;
 import pe.edu.unamba.academic.services.UserService;
 import pe.edu.unamba.academic.services.actors.RolService;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
@@ -190,6 +191,13 @@ public class TitleReservationStepOneService {
             existingReservation.setObservations(titleReservationDetails.getObservations());
             existingReservation.setTitle(titleReservationDetails.getTitle());
             existingReservation.setLineOfResearch(titleReservationDetails.getLineOfResearch());
+            LOG.info("Valor de projectSimilarity recibido: {}", titleReservationDetails.getProjectSimilarity());
+            existingReservation.setProjectSimilarity(
+                    titleReservationDetails.getProjectSimilarity() != null
+                            ? new BigDecimal(titleReservationDetails.getProjectSimilarity().toString())
+                            : BigDecimal.ZERO
+            );
+
 
             return titleReservationStepOneRepository.save(existingReservation);
         }).orElse(null);

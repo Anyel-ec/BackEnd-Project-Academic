@@ -10,15 +10,14 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "p1_reserva_titulo")
+@Table(name = "p1_reservacion_titulo")
 @Data
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"},
-        allowGetters = true)
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
 public class TitleReservationStepOne {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_reserva_titulo")
+    @Column(name = "id_reservacion_titulo")
     private Long id;
 
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
@@ -49,9 +48,8 @@ public class TitleReservationStepOne {
     @JoinColumn(name = "id_linea_de_reserva", nullable = true)
     private LineResearch lineOfResearch;
 
-    @Column(name = "similitud_de_proyecto", columnDefinition = "BIG DECIMAL")
-    private BigDecimal projectSimilarity;
-
+    @Column(name = "similitud_de_proyecto", precision = 10, scale = 2)
+    private BigDecimal projectSimilarity = BigDecimal.ZERO;
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
