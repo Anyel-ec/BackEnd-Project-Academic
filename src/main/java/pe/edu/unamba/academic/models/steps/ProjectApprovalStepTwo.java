@@ -3,9 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import pe.edu.unamba.academic.models.actors.Teacher;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Table(name = "p2_aprobacion_proyecto")
@@ -22,9 +20,8 @@ public class ProjectApprovalStepTwo {
     @JoinColumn(name = "reservacion_titulo", referencedColumnName = "id_reservacion_titulo")
     private TitleReservationStepOne titleReservationStepOne;
 
-    @OneToMany
     @Column(name = "asesor")
-    private List<Teacher> adviser;
+    private String adviser;
 
     @Column(name = "eliminado")
     private boolean isDisable;
