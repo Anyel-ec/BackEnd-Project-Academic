@@ -23,6 +23,9 @@ public class ProjectApprovalStepTwo {
     @Column(name = "asesor")
     private String adviser;
 
+    @Column(name = "coasesor")
+    private String coadviser;   
+
     @Column(name = "eliminado")
     private boolean isDisable;
 
