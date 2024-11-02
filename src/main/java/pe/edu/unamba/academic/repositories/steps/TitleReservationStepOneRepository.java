@@ -12,6 +12,5 @@ public interface TitleReservationStepOneRepository extends JpaRepository<TitleRe
     Optional<TitleReservationStepOne> findByPdfDocument_Id(Long pdfDocumentId);
     // Añadir este método para buscar una reservación por título
     Optional<TitleReservationStepOne> findByTitle(String title);
-
     boolean existsByTitle(String title); // Método que verifica si el título ya existe
 }

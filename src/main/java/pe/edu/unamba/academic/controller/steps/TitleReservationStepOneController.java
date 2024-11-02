@@ -36,17 +36,29 @@ public class TitleReservationStepOneController {
         try {
             TitleReservationStepOne savedReservation = titleReservationStepOneService.saveTitleReservation(titleReservation);
             return ResponseEntity.ok(savedReservation);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Ya existe una reservación con este título")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al guardar la reservación: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al guardar la reservación: " + e.getMessage());
         }
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<TitleReservationStepOne> updateTitleReservation(@PathVariable Long id, @RequestBody TitleReservationStepOne titleReservationDetails) {
+    public ResponseEntity<?> updateTitleReservation(@PathVariable Long id, @RequestBody TitleReservationStepOne titleReservationDetails) {
         try {
-            return ResponseEntity.ok().body(titleReservationStepOneService.updateTitleReservation(id, titleReservationDetails));
+            TitleReservationStepOne updatedReservation = titleReservationStepOneService.updateTitleReservation(id, titleReservationDetails);
+            return ResponseEntity.ok(updatedReservation);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Ya existe una reserva con este título")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar la reservación: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al actualizar la reservación: " + e.getMessage());
         }
     }
 
