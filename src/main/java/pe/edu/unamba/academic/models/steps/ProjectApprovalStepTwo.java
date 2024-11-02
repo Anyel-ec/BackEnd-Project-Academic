@@ -33,8 +33,8 @@ public class ProjectApprovalStepTwo {
     @Column(name = "eliminado")
     private Boolean isDisable = false;
 
-    @Column(name="proyecto_aprobado")
-    private Boolean approvedProject = true;
+    @Column(name="proyecto_arobado")
+    private boolean approvedProject = false;
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;

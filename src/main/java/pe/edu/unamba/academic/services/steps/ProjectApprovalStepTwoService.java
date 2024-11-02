@@ -36,7 +36,7 @@ public class ProjectApprovalStepTwoService {
             approval.setAdviser(updatedProjectApproval.getAdviser());
             approval.setIsDisable(updatedProjectApproval.getIsDisable());
             approval.setCoadviser(updatedProjectApproval.getCoadviser());
-            approval.setApprovedProject(updatedProjectApproval.getApprovedProject());
+            approval.setApprovedProject(updatedProjectApproval.isApprovedProject());
             approval.setObservations(updatedProjectApproval.getObservations());
             return projectApprovalStepTwoRepository.save(approval);
         });

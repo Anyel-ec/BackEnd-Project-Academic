@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.User;
 import pe.edu.unamba.academic.models.actors.Student;
 import pe.edu.unamba.academic.models.messages.response.JsonResponse;
+import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
 import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
 import pe.edu.unamba.academic.repositories.actors.StudentRepository;
+import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
 import pe.edu.unamba.academic.repositories.steps.TitleReservationStepOneRepository;
 import pe.edu.unamba.academic.services.EmailService;
 import pe.edu.unamba.academic.services.UserService;
@@ -30,6 +32,7 @@ import java.util.Optional;
 public class TitleReservationStepOneService {
 
     private final TitleReservationStepOneRepository titleReservationStepOneRepository;
+    private final ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
     private final RolService rolService;
     private final StudentRepository studentRepository;
     private final UserService userService;
@@ -198,8 +201,24 @@ public class TitleReservationStepOneService {
                             : BigDecimal.ZERO
             );
 
+            // Guardar la actualización de la reservación
+            TitleReservationStepOne updatedReservation = titleReservationStepOneRepository.save(existingReservation);
 
-            return titleReservationStepOneRepository.save(existingReservation);
+            // Verificar si cumple con los requisitos y crear el objeto ProjectApprovalStepTwo
+            if (updatedReservation.isMeetsRequirements()) {
+                ProjectApprovalStepTwo projectApproval = new ProjectApprovalStepTwo();
+                projectApproval.setTitleReservationStepOne(updatedReservation);
+                projectApproval.setAdviser(null); // Configura el asesor correspondiente
+                projectApproval.setCoadviser(null); // Configura el coasesor correspondiente
+                projectApproval.setIsDisable(false); // Por defecto, no está deshabilitado
+                projectApproval.setApprovedProject(false); // Por defecto, el proyecto no está aprobado
+                projectApproval.setObservations(null);
+
+                // Guardar la aprobación de proyecto en la base de datos
+                projectApprovalStepTwoRepository.save(projectApproval);
+            }
+
+            return updatedReservation;
         }).orElse(null);
     }
 

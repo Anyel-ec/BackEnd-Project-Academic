@@ -37,7 +37,7 @@ public class TitleReservationStepOne {
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;
 
-    @Column(name = "titulo", unique = true)
+    @Column(name = "titulo", nullable = true)
     private String title;
 
     @OneToOne
