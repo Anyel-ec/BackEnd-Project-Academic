@@ -34,7 +34,9 @@ public class ProjectApprovalStepTwoService {
         return projectApprovalStepTwoRepository.findById(id).map(approval -> {
             approval.setTitleReservationStepOne(updatedProjectApproval.getTitleReservationStepOne());
             approval.setAdviser(updatedProjectApproval.getAdviser());
-            approval.setDisable(updatedProjectApproval.isDisable());
+            approval.setIsDisable(updatedProjectApproval.getIsDisable());
+            approval.setCoadviser(updatedProjectApproval.getCoadviser());
+            approval.setApprovedProject(updatedProjectApproval.getApprovedProject());
             approval.setObservations(updatedProjectApproval.getObservations());
             return projectApprovalStepTwoRepository.save(approval);
         });

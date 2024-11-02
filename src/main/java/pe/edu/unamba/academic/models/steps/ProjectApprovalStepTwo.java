@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import pe.edu.unamba.academic.models.actors.Teacher;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -20,14 +22,19 @@ public class ProjectApprovalStepTwo {
     @JoinColumn(name = "reservacion_titulo", referencedColumnName = "id_reservacion_titulo")
     private TitleReservationStepOne titleReservationStepOne;
 
-    @Column(name = "asesor")
-    private String adviser;
+    @ManyToOne
+    @JoinColumn(name = "asesor")
+    private Teacher adviser;
 
-    @Column(name = "coasesor")
-    private String coadviser;   
+    @ManyToOne
+    @JoinColumn(name = "coasesor")
+    private Teacher coadviser;
 
     @Column(name = "eliminado")
-    private boolean isDisable;
+    private Boolean isDisable = false;
+
+    @Column(name="proyecto_aprobado")
+    private Boolean approvedProject = true;
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;
