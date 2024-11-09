@@ -71,4 +71,8 @@ public class TitleReservationStepOneController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/buscar")
+    public List<TitleReservationStepOne> searchTitleReservationsByTitle(@RequestParam("title") String title) {
+        return titleReservationStepOneService.searchTitleReservationsByTitle(title);
+    }
 }

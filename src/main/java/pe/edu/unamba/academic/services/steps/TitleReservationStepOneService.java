@@ -40,7 +40,13 @@
         private final PasswordEncoder passwordEncoder;
     
         private static final Logger LOG = LoggerFactory.getLogger(TitleReservationStepOneService.class);
-    
+
+
+        public List<TitleReservationStepOne> searchTitleReservationsByTitle(String title) {
+            return titleReservationStepOneRepository.findByTitleContaining(title);
+        }
+
+
         public List<TitleReservationStepOne> getAllTitleReservations() {
             LOG.info("Obteniendo todas las reservaciones de título.");
             return titleReservationStepOneRepository.findAll();

@@ -50,7 +50,7 @@ public class TitleReservationStepOne {
     @JoinColumn(name = "id_linea_de_reserva", nullable = true)
     private LineResearch lineOfResearch;
 
-    @   DecimalMin(value = "0.00", inclusive = true, message = "La similitud no puede ser menor que 0")
+    @DecimalMin(value = "0.00", inclusive = true, message = "La similitud no puede ser menor que 0")
     @DecimalMax(value = "25.00", inclusive = true, message = "La similitud no puede ser mayor que 25")
     @Column(name = "similitud_de_proyecto", precision = 10, scale = 2)
     private BigDecimal projectSimilarity = BigDecimal.ZERO;
