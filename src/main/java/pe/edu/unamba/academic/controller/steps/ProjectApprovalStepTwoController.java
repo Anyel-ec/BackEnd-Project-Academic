@@ -1,6 +1,7 @@
 package pe.edu.unamba.academic.controller.steps;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/aprobacion_proyecto")
 public class ProjectApprovalStepTwoController {
 
     private final ProjectApprovalStepTwoService projectApprovalStepTwoService;
-
-    @Autowired
-    public ProjectApprovalStepTwoController(ProjectApprovalStepTwoService projectApprovalStepTwoService) {
-        this.projectApprovalStepTwoService = projectApprovalStepTwoService;
-    }
 
     // Obtener todas las aprobaciones de proyectos
     @GetMapping
@@ -37,15 +34,15 @@ public class ProjectApprovalStepTwoController {
 
     // Crear una nueva aprobación de proyecto
     @PostMapping
-    public ResponseEntity<ProjectApprovalStepTwo> createProjectApproval(@RequestBody ProjectApprovalStepTwo projectApprovalStepTwo) {
+    public ResponseEntity<ProjectApprovalStepTwo> createProjectApproval(@Valid @RequestBody ProjectApprovalStepTwo projectApprovalStepTwo) {
         ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoService.createProjectApproval(projectApprovalStepTwo);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedApproval);
     }
 
     // Actualizar una aprobación de proyecto existente
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectApprovalStepTwo> updateProjectApproval(@PathVariable Long id, @RequestBody ProjectApprovalStepTwo updatedProjectApproval) {
-        Optional<ProjectApprovalStepTwo> savedApproval = projectApprovalStepTwoService.updateProjectApproval(id, updatedProjectApproval);
+    public ResponseEntity<Optional<ProjectApprovalStepTwo>> updateProjectApproval(@PathVariable Long id, @Valid @RequestBody ProjectApprovalStepTwo updatedProjectApproval) {
+        Optional<Optional<ProjectApprovalStepTwo>> savedApproval = projectApprovalStepTwoService.updateProjectApproval(id, updatedProjectApproval);
         return savedApproval.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

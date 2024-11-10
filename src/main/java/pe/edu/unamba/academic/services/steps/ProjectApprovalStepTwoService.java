@@ -1,18 +1,22 @@
 package pe.edu.unamba.academic.services.steps;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
+import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
+import pe.edu.unamba.academic.repositories.steps.JuryAppointmentStepThreeRepository;
 import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
+@Slf4j
 public class ProjectApprovalStepTwoService {
-
-    @Autowired
-    private ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
+    private final JuryAppointmentStepThreeRepository juryAppointmentStepThreeRepository;
+    private final ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
 
     // Obtener todas las aprobaciones de proyectos
     public List<ProjectApprovalStepTwo> getAllProjectApprovals() {
@@ -29,18 +33,37 @@ public class ProjectApprovalStepTwoService {
         return projectApprovalStepTwoRepository.save(projectApprovalStepTwo);
     }
 
-    // Actualizar una aprobación de proyecto existente
-    public Optional<ProjectApprovalStepTwo> updateProjectApproval(Long id, ProjectApprovalStepTwo updatedProjectApproval) {
+    public Optional<Optional<ProjectApprovalStepTwo>> updateProjectApproval(Long id, ProjectApprovalStepTwo updatedProjectApproval) {
         return projectApprovalStepTwoRepository.findById(id).map(approval -> {
+            // Actualizar los campos de la aprobación de proyecto
             approval.setTitleReservationStepOne(updatedProjectApproval.getTitleReservationStepOne());
             approval.setAdviser(updatedProjectApproval.getAdviser());
             approval.setIsDisable(updatedProjectApproval.getIsDisable());
             approval.setCoadviser(updatedProjectApproval.getCoadviser());
             approval.setApprovedProject(updatedProjectApproval.isApprovedProject());
             approval.setObservations(updatedProjectApproval.getObservations());
-            return projectApprovalStepTwoRepository.save(approval);
+
+            // Guardar la aprobación de proyecto actualizada
+            ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoRepository.save(approval);
+
+            // Crear el paso de asignación de jurados si el proyecto está aprobado
+            if (savedApproval.isApprovedProject()) {
+                JuryAppointmentStepThree juryAppointment = new JuryAppointmentStepThree();
+                juryAppointment.setProjectApprovalStepTwo(savedApproval);
+                juryAppointment.setPresident(null);
+                juryAppointment.setFirstMember(null);
+                juryAppointment.setSecondMember(null);
+                juryAppointment.setAccessory(null);
+                juryAppointment.setObservations(null);
+
+                // Guardar la asignación de jurados
+                juryAppointmentStepThreeRepository.save(juryAppointment);
+            }
+
+            return Optional.of(savedApproval);
         });
     }
+
 
     // Eliminar una aprobación de proyecto por ID
     public boolean deleteProjectApproval(Long id) {

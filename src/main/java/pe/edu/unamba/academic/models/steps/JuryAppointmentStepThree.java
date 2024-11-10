@@ -32,7 +32,7 @@ public class JuryAppointmentStepThree {
 
     @ManyToOne
     @JoinColumn(name = "segundo_miembro")
-    private Teacher SecondMember;
+    private Teacher secondMember;
 
     @ManyToOne
     @JoinColumn(name = "accesitario")
