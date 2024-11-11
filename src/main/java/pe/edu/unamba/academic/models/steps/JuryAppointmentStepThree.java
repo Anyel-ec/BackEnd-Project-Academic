@@ -8,18 +8,18 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "p3_desigacion_titulo")
+@Table(name = "p3_desigacion_jurado")
 @Data
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
 public class JuryAppointmentStepThree {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_desigacion_titulo")
+    @Column(name = "id_desigacion_jurado")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "aprobacion_titulo", referencedColumnName = "id_aprobacion_proyecto")
+    @JoinColumn(name = "aprobacion_proyecto ", referencedColumnName = "id_aprobacion_proyecto")
     private ProjectApprovalStepTwo projectApprovalStepTwo;
 
     @ManyToOne
