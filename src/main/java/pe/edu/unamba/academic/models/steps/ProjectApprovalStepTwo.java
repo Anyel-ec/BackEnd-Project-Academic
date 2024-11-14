@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.actors.Teacher;
-
 import java.sql.Timestamp;
 
 @Entity

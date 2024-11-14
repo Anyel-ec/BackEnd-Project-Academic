@@ -161,7 +161,7 @@
                 newUser.setRol(rolService.getRolById(2).orElseThrow(() -> new IllegalArgumentException("Rol no encontrado")));
     
                 LOG.info("Intentando enviar email a {}, con código de usuario {}", student.getEmail(), studentCode);
-                emailService.sendEmail(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
+                emailService.sendPassword(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
     
                 userService.saveUser(newUser);
                 LOG.info("Usuario creado y email enviado para el estudiante con código: {}", studentCode);

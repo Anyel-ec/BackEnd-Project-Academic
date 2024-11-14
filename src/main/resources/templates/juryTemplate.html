@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #444;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .jury-role {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Asignación de Jurados para tu Trabajo de Titulación</h1>
+    <p>Estimado/a {{firstName}},</p>
+    <p>Te informamos que el proceso de asignación de jurados ha sido completado exitosamente. A continuación, encontrarás los detalles de los jurados asignados a tu trabajo:</p>
+
+    <p><span class="jury-role">Presidente del Jurado:</span> {{president}}</p>
+    <p><span class="jury-role">Primer Miembro:</span> {{firstMember}}</p>
+    <p><span class="jury-role">Segundo Miembro:</span> {{secondMember}}</p>
+    <p><span class="jury-role">Accesitario:</span> {{accessory}}</p>
+
+    <p>Para cualquier consulta adicional, no dudes en contactarnos.</p>
+    <p>Saludos cordiales,<br>Equipo Académico</p>
+</div>
+</body>
+</html>

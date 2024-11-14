@@ -6,5 +6,4 @@ import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
 
 @Repository
 public interface JuryAppointmentStepThreeRepository extends JpaRepository<JuryAppointmentStepThree, Long>{
-
 }

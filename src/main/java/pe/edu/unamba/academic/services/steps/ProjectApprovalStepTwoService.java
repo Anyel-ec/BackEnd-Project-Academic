@@ -53,6 +53,7 @@ public class ProjectApprovalStepTwoService {
                 juryAppointment.setPresident(null);
                 juryAppointment.setFirstMember(null);
                 juryAppointment.setSecondMember(null);
+                juryAppointment.setMeetRequirements(false);
                 juryAppointment.setAccessory(null);
                 juryAppointment.setObservations(null);
 

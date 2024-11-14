@@ -1,10 +1,9 @@
-package pe.edu.unamba.academic.services.steps;
+package pe.edu.unamba.academic.models.steps;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
 
 @Entity
 @Table(name = "p4_revision_reporte")
@@ -20,5 +19,8 @@ public class ReportReviewStepFour {
     @OneToOne
     @JoinColumn(name="designacion_jurado", referencedColumnName = "id_designacion_jurado")
     private JuryAppointmentStepThree juryAppointmentStepThree;
+
+    @Column(name = "cumple_requerimientos")
+    private boolean meetRequirements;
 
 }
