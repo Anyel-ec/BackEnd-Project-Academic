@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
-import pe.edu.unamba.academic.models.actors.Teacher;
 import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
 import pe.edu.unamba.academic.models.steps.ReportReviewStepFour;
 import pe.edu.unamba.academic.repositories.steps.JuryAppointmentStepThreeRepository;
