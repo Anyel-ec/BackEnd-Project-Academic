@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "p4_revision_reporte")
 @Data
@@ -22,5 +24,14 @@ public class ReportReviewStepFour {
 
     @Column(name = "cumple_requerimientos")
     private boolean meetRequirements;
+
+    @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
+    private String observations;
+
+    @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
+
+    @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private Timestamp updatedAt;
 
 }

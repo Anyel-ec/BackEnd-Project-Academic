@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.steps.ReportReviewStepFour;
-import pe.edu.unamba.academic.repositories.steps.JuryAppointmentStepThreeRepository;
 import pe.edu.unamba.academic.repositories.steps.ReportReviewStepFourRepository;
 
 import java.util.List;
@@ -15,11 +14,10 @@ import java.util.Optional;
 @Slf4j
 public class ReportReviewStepFourService {
     private final ReportReviewStepFourRepository reportReviewStepFourRepository;
-    private final JuryAppointmentStepThreeRepository juryAppointmentStepThreeRepository;
     public List<ReportReviewStepFour> getAllReportReview() {
         return reportReviewStepFourRepository.findAll();
     }
-    public Optional<ReportReviewStepFour> getAllReportReviewById(Long id) {
+    public Optional<ReportReviewStepFour> getReportReviewById(Long id) {
         return reportReviewStepFourRepository.findById(id);
     }
 
@@ -28,13 +26,19 @@ public class ReportReviewStepFourService {
     }
 
     public Optional<ReportReviewStepFour> updateReportReview(Long id, ReportReviewStepFour updatedReportReview) {
-        return reportReviewStepFourRepository.findById(id).map(report-> {
+        return reportReviewStepFourRepository.findById(id).map(report -> {
             if (updatedReportReview.getJuryAppointmentStepThree() != null) {
                 report.setJuryAppointmentStepThree(updatedReportReview.getJuryAppointmentStepThree());
             }
-    return reportReviewStepFourRepository.save(report);
+            report.setMeetRequirements(updatedReportReview.isMeetRequirements()); // Este es booleano, por lo que siempre se asigna
+            if (updatedReportReview.getObservations() != null) {
+                report.setObservations(updatedReportReview.getObservations());
+            }
+            return reportReviewStepFourRepository.save(report);
         });
     }
+
+
     public boolean deleteReportReview(Long id) {
         if (reportReviewStepFourRepository.existsById(id)) {
             reportReviewStepFourRepository.deleteById(id);
