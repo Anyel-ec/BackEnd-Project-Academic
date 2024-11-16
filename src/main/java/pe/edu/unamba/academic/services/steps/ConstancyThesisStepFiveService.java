@@ -25,12 +25,41 @@ public class ConstancyThesisStepFiveService {
         return constancyThesisStepFiveRepository.save(constancyThesisStepFive);
     }
     public Optional<ConstancyThesisStepFive> updateConstancyThesis(Long id, ConstancyThesisStepFive updatedConstancyThesis) {
-        return constancyThesisStepFiveRepository.findById(id).map(thesis->{
-            thesis.setReportReviewStepFour(updatedConstancyThesis.getReportReviewStepFour());
-            thesis.setObservations(updatedConstancyThesis.getObservations());
-            thesis.setMeetsRequirements(updatedConstancyThesis.isMeetsRequirements());
-            return constancyThesisStepFiveRepository.save(thesis);
-        });
+        log.info("Actualizando la constancia de tesis con ID: {}", id);
+        return Optional.ofNullable(constancyThesisStepFiveRepository.findById(id)
+                .map(existingThesis -> {
+                    updateFields(existingThesis, updatedConstancyThesis);
+                    log.info("Constancia de tesis actualizada con éxito para el ID: {}", id);
+                    return constancyThesisStepFiveRepository.save(existingThesis);
+                })
+                .orElseGet(() -> {
+                    log.warn("No se encontró la constancia de tesis con ID: {}", id);
+                    return null; // O lanzar una excepción si se espera que la constancia siempre exista
+                }));
+    }
+
+    private void updateFields(ConstancyThesisStepFive existingThesis, ConstancyThesisStepFive updatedThesis) {
+        if (updatedThesis.getReportReviewStepFour() != null) {
+            existingThesis.setReportReviewStepFour(updatedThesis.getReportReviewStepFour());
+        }
+        if (updatedThesis.getObservations() != null) {
+            existingThesis.setObservations(updatedThesis.getObservations());
+        }
+        // Asegura que `meetsRequirements` se actualiza incluso si es false
+        existingThesis.setMeetsRequirements(updatedThesis.isMeetsRequirements());
+
+        // Aquí puedes agregar más campos para actualizar según sea necesario
+    }
+
+
+    public void removePDFDocumentFromConstancy(ConstancyThesisStepFive constancyThesis) {
+        constancyThesis.setPdfDocument(null);  // Eliminara la referencia al documento PDF
+        constancyThesisStepFiveRepository.save(constancyThesis);  // Guardar la actualización en la base de datos
+    }
+    public boolean checkIfPDFExists(Long reservationId) {
+        return constancyThesisStepFiveRepository.findById(reservationId)
+                .map(ConstancyThesisStepFive::getPdfDocument)
+                .isPresent();
     }
     public boolean deleteConstancyThesisById(Long id) {
         if(constancyThesisStepFiveRepository.existsById(id)) {

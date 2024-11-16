@@ -1,5 +1,6 @@
 package pe.edu.unamba.academic.controller.steps;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,19 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/pdfDocument/OneStep")
 public class PDFDocumentStepOneController {
-
     private final PDFDocumentStepOneService pdfDocumentStepOneService;
     private final TitleReservationStepOneService titleReservationStepOneService;
-
-    public PDFDocumentStepOneController(PDFDocumentStepOneService pdfDocumentStepOneService,
-                                        TitleReservationStepOneService titleReservationStepOneService) {
-        this.pdfDocumentStepOneService = pdfDocumentStepOneService;
-        this.titleReservationStepOneService = titleReservationStepOneService;
-    }
 
     @PostMapping("/{id}/upload")
     public ResponseEntity<PDFDocumentStepOne> uploadPDFDocument(@PathVariable Long id, @RequestBody Map<String, String> documentData) {

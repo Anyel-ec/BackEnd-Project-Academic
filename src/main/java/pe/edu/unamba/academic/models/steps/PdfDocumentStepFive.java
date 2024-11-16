@@ -1,8 +1,16 @@
 package pe.edu.unamba.academic.models.steps;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Timestamp;
 
 @Entity
+@Data
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+@Slf4j
+@Table(name = "documentos_paso_5")
 public class PdfDocumentStepFive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,14 +1,17 @@
     package pe.edu.unamba.academic.models.steps;
 
+    import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
     import jakarta.persistence.*;
-    import lombok.Getter;
-    import lombok.Setter;
+    import lombok.Data;
+    import lombok.extern.slf4j.Slf4j;
+
     import java.sql.Timestamp;
 
     @Entity
+    @Data
+    @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
+    @Slf4j
     @Table(name = "pdf_documents_step1")
-    @Getter
-    @Setter
     public class PDFDocumentStepOne {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
