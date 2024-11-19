@@ -22,19 +22,19 @@ public class JuryAppointmentStepThree {
     private ProjectApprovalStepTwo projectApprovalStepTwo;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "presidente")
+    @JoinColumn(name = "presidente", referencedColumnName = "id_docente")
     private Teacher president;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "primer_miembro")
+    @JoinColumn(name = "primer_miembro", referencedColumnName = "id_docente")
     private Teacher firstMember;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "segundo_miembro")
+    @JoinColumn(name = "segundo_miembro", referencedColumnName = "id_docente")
     private Teacher secondMember;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "accesitario")
+    @JoinColumn(name = "accesitario" , referencedColumnName = "id_docente")
     private Teacher accessory;
 
     @Column(name = "eliminado")

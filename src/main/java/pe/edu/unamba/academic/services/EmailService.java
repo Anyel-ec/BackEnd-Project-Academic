@@ -1,17 +1,19 @@
 package pe.edu.unamba.academic.services;
 
 import ch.qos.logback.classic.Logger;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import pe.edu.unamba.academic.models.actors.Teacher;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+@RequiredArgsConstructor
 @Service
 public class EmailService {
 
@@ -19,76 +21,79 @@ public class EmailService {
     private JavaMailSender emailSender;
     private static final Logger log = (Logger) LoggerFactory.getLogger(EmailService.class);
 
+    // Enviar contraseña
     public void sendPassword(String to, String subject, String firstName, String username, String password) {
         try {
-            String htmlContent = new String(Files.readAllBytes(Paths.get(new ClassPathResource("templates/emailTemplate.html").getURI())));
-            htmlContent = htmlContent.replace("{{firstName}}", firstName);
-            htmlContent = htmlContent.replace("{{username}}", username);
-            htmlContent = htmlContent.replace("{{password}}", password);
+            // Cargar plantilla de correo
+            String htmlContent = loadEmailTemplate("templates/emailTemplate.html");
 
-            var mimeMessage = ((JavaMailSenderImpl) emailSender).createMimeMessage();
-            var mimeMessageHelper = new org.springframework.mail.javamail.MimeMessageHelper(mimeMessage, "utf-8");
+            // Reemplazar valores en la plantilla
+            htmlContent = htmlContent.replace("{{firstName}}", defaultIfNull(firstName, "Usuario", "firstName"));
+            htmlContent = htmlContent.replace("{{username}}", defaultIfNull(username, "Usuario", "username"));
+            htmlContent = htmlContent.replace("{{password}}", defaultIfNull(password, "Contraseña", "password"));
 
-            mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(htmlContent, true);
-
-            emailSender.send(mimeMessage);
+            // Configurar y enviar el correo
+            sendEmail(to, subject, htmlContent);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error al enviar correo de contraseña a: {}", to, e);
         }
     }
 
-    public void sendJurys(String to, String subject, String firstName, String username, Teacher president, Teacher firstMember, Teacher secondMember, Teacher accessory) {
+    // Enviar información de jurados
+    public void sendJurys(String to, String subject, String firstName, String lastName,
+                          String namePresident, String nameFirstMember, String nameSecondMember, String nameAccessory) {
         try {
-            String htmlContent = new String(Files.readAllBytes(Paths.get(new ClassPathResource("templates/juryTemplate.html").getURI())));
+            // Cargar plantilla de correo (si tienes una específica para jurados, úsala aquí)
+            String htmlContent = loadEmailTemplate("templates/juryTemplate.html");
 
-            // Asegúrate de que los valores no sean null, asignando un valor predeterminado en caso de que lo sean y agregando logs para depuración
-            if (firstName == null) {
-                firstName = "Estudiante";
-                log.warn("firstName es null, se asigna el valor predeterminado.");
-            }
-            if (username == null) {
-                username = "No asignado";
-                log.warn("username es null, se asigna el valor predeterminado.");
-            }
-            String presidentName = (president != null && president.getFirstNames() != null) ? president.getFirstNames() : "No asignado";
-            if (presidentName.equals("No asignado")) {
-                log.warn("president o president.getFirstNames() es null, se asigna el valor predeterminado.");
-            }
-            String firstMemberName = (firstMember != null && firstMember.getFirstNames() != null) ? firstMember.getFirstNames() : "No asignado";
-            if (firstMemberName.equals("No asignado")) {
-                log.warn("firstMember o firstMember.getFirstNames() es null, se asigna el valor predeterminado.");
-            }
-            String secondMemberName = (secondMember != null && secondMember.getFirstNames() != null) ? secondMember.getFirstNames() : "No asignado";
-            if (secondMemberName.equals("No asignado")) {
-                log.warn("secondMember o secondMember.getFirstNames() es null, se asigna el valor predeterminado.");
-            }
-            String accessoryName = (accessory != null && accessory.getFirstNames() != null) ? accessory.getFirstNames() : "No asignado";
-            if (accessoryName.equals("No asignado")) {
-                log.warn("accessory o accessory.getFirstNames() es null, se asigna el valor predeterminado.");
-            }
+            // Reemplazar valores en la plantilla o construir el HTML
+            htmlContent = htmlContent.replace("{{firstName}}", defaultIfNull(firstName, "Usuario", "firstName"));
+            htmlContent = htmlContent.replace("{{lastName}}", defaultIfNull(lastName, "Apellido", "lastName"));
+            htmlContent = htmlContent.replace("{{namePresident}}", defaultIfNull(namePresident, "No asignado", "namePresident"));
+            htmlContent = htmlContent.replace("{{nameFirstMember}}", defaultIfNull(nameFirstMember, "No asignado", "nameFirstMember"));
+            htmlContent = htmlContent.replace("{{nameSecondMember}}", defaultIfNull(nameSecondMember, "No asignado", "nameSecondMember"));
+            htmlContent = htmlContent.replace("{{nameAccessory}}", defaultIfNull(nameAccessory, "No asignado", "nameAccessory"));
 
-            // Realiza los reemplazos usando los valores predeterminados
-            htmlContent = htmlContent.replace("{{firstName}}", firstName);
-            htmlContent = htmlContent.replace("{{username}}", username);
-            htmlContent = htmlContent.replace("{{president}}", presidentName);
-            htmlContent = htmlContent.replace("{{firstMember}}", firstMemberName);
-            htmlContent = htmlContent.replace("{{secondMember}}", secondMemberName);
-            htmlContent = htmlContent.replace("{{accessory}}", accessoryName);
-
-            var mimeMessage = ((JavaMailSenderImpl) emailSender).createMimeMessage();
-            var mimeMessageHelper = new org.springframework.mail.javamail.MimeMessageHelper(mimeMessage, "utf-8");
-
-            mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(htmlContent, true);
-
-            emailSender.send(mimeMessage);
+            // Configurar y enviar el correo
+            sendEmail(to, subject, htmlContent);
         } catch (Exception e) {
-            log.error("Error al enviar el correo: ", e);
-            e.printStackTrace();
+            log.error("Error al enviar correo de jurados a: {}", to, e);
         }
     }
 
+    // Método genérico para enviar correos
+    private void sendEmail(String to, String subject, String htmlContent) throws Exception {
+        try {
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true); // true para contenido HTML
+            emailSender.send(mimeMessage);
+
+            log.info("Correo enviado exitosamente a: {}", to);
+        } catch (Exception e) {
+            log.error("Error al enviar el correo a: {}", to, e);
+            throw e;
+        }
+    }
+
+    // Método para cargar plantillas HTML
+    private String loadEmailTemplate(String templatePath) throws IOException {
+        try {
+            return new String(Files.readAllBytes(Paths.get(new ClassPathResource(templatePath).getURI())));
+        } catch (Exception e) {
+            log.error("Error al cargar la plantilla de correo: {}", templatePath, e);
+            throw new IOException("No se pudo cargar la plantilla de correo: " + templatePath, e);
+        }
+    }
+
+    // Método auxiliar para valores predeterminados
+    private String defaultIfNull(String value, String defaultValue, String fieldName) {
+        if (value == null) {
+            log.warn("{} es null, se asigna el valor predeterminado: {}", fieldName, defaultValue);
+            return defaultValue;
+        }
+        return value;
+    }
 }
