@@ -18,7 +18,6 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class JuryAppointmentStepThreeService {
-
     private final JuryAppointmentStepThreeRepository juryAppointmentStepThreeRepository;
     private final ReportReviewStepFourRepository reportReviewStepFourRepository;
     private final EmailService emailService;
@@ -26,125 +25,54 @@ public class JuryAppointmentStepThreeService {
     public List<JuryAppointmentStepThree> getAllJuryAppointment() {
         return juryAppointmentStepThreeRepository.findAll();
     }
+
+    public Optional<JuryAppointmentStepThree> getJuryAppointmentById(Long id) {
+        return juryAppointmentStepThreeRepository.findById(id);
+    }
+
     public JuryAppointmentStepThree createJuryAppointment(JuryAppointmentStepThree juryAppointmentStepThree) {
         return juryAppointmentStepThreeRepository.save(juryAppointmentStepThree);
     }
-    public Optional<JuryAppointmentStepThree> getJuryAppointmentById(Long id) {
-        log.info("Consultando el registro con ID: {}", id);
-
-        Optional<JuryAppointmentStepThree> juryOptional = juryAppointmentStepThreeRepository.findByIdWithRelations(id);
-
-        juryOptional.ifPresent(j -> {
-            log.info("Registro encontrado con ID: {}", j.getId());
-            log.info("Cumple requisitos: {}", j.isMeetRequirements());
-            log.info("Observaciones: {}", j.getObservations());
-
-            logRelations(j); // Log de relaciones inicializadas
-        });
-
-        if (juryOptional.isEmpty()) {
-            log.warn("No se encontró un registro con el ID: {}", id);
-        }
-
-        return juryOptional;
-    }
 
     public Optional<JuryAppointmentStepThree> updateJuryAppointment(Long id, JuryAppointmentStepThree updatedJuryAppointment) {
-        log.info("Iniciando actualización del registro con ID: {}", id);
+        return juryAppointmentStepThreeRepository.findByIdWithRelations(id).map(jurya -> {
+            // Actualizar campos no nulos
+            Optional<JuryAppointmentStepThree> result = juryAppointmentStepThreeRepository.findByIdWithRelations(id);
+            if (result.isPresent()) {
+                JuryAppointmentStepThree jury = result.get();
 
-        return juryAppointmentStepThreeRepository.findByIdWithRelations(id).map(jury -> {
-            log.info("Estado actual del registro antes de actualizar:");
-            logRelations(jury); // Logs iniciales
-
-            // Realizar actualizaciones en el objeto cargado
-            if (updatedJuryAppointment.getProjectApprovalStepTwo() != null) {
-                jury.setProjectApprovalStepTwo(updatedJuryAppointment.getProjectApprovalStepTwo());
-            }
-            if (updatedJuryAppointment.getPresident() != null) {
-                jury.setPresident(updatedJuryAppointment.getPresident());
-            }
-            if (updatedJuryAppointment.getFirstMember() != null) {
-                jury.setFirstMember(updatedJuryAppointment.getFirstMember());
-            }
-            if (updatedJuryAppointment.getSecondMember() != null) {
-                jury.setSecondMember(updatedJuryAppointment.getSecondMember());
-            }
-            if (updatedJuryAppointment.getAccessory() != null) {
-                jury.setAccessory(updatedJuryAppointment.getAccessory());
-            }
-            if (updatedJuryAppointment.getIsDisable() != null) {
-                jury.setIsDisable(updatedJuryAppointment.getIsDisable());
-            }
-            if (updatedJuryAppointment.isMeetRequirements() != jury.isMeetRequirements()) {
-                jury.setMeetRequirements(updatedJuryAppointment.isMeetRequirements());
-            }
-            if (updatedJuryAppointment.getObservations() != null) {
-                jury.setObservations(updatedJuryAppointment.getObservations());
+                // Actualizar los campos requeridos del objeto
+                if (updatedJuryAppointment.getPresident() != null) {
+                    jurya.setPresident(updatedJuryAppointment.getPresident());
+                }
+                if (updatedJuryAppointment.getFirstMember() != null) {
+                    jurya.setFirstMember(updatedJuryAppointment.getFirstMember());
+                }
+                if (updatedJuryAppointment.getSecondMember() != null) {
+                    jurya.setSecondMember(updatedJuryAppointment.getSecondMember());
+                }
+                if (updatedJuryAppointment.getAccessory() != null) {
+                    jurya.setAccessory(updatedJuryAppointment.getAccessory());
+                }
+                jurya.setObservations(updatedJuryAppointment.getObservations());
+                jurya.setMeetRequirements(updatedJuryAppointment.isMeetRequirements());
             }
 
-            log.info("Datos después de la actualización:");
-            logRelations(jury); // Logs después de la actualización
+            // Guardar cambios
+            juryAppointmentStepThreeRepository.save(jurya);
+            log.info("Inicialización forzada completada.");
 
-            // Guardar los cambios
-            JuryAppointmentStepThree savedJury = juryAppointmentStepThreeRepository.save(jury);
+            if (jurya.isMeetRequirements()) {
+                createStepFourIfNeeded(jurya);
 
-            // Crear paso 4 y enviar correos si es necesario
-            if (savedJury.isMeetRequirements()) {
-                createStepFourIfNeeded(savedJury);
-                sendJuryEmails(savedJury);
+                // Enviar correos si cumple los requisitos
+                sendJuryEmails(jurya);
             }
-
-            return Optional.of(savedJury);
-        }).orElse(Optional.empty());
+            return jurya;
+        });
     }
 
-
-    private void sendJuryEmails(JuryAppointmentStepThree jury) {
-        log.info("Preparando para enviar correos de jurados...");
-        logRelations(jury); // Logs finales antes de enviar correos
-
-        var student = jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudent();
-        var studentTwo = jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudentTwo();
-
-        if (student != null) {
-            log.info("Enviando correo al estudiante principal: {}", student.getEmail());
-            emailService.sendJurys(
-                    student.getEmail(),
-                    "Información de Jurados Asignados",
-                    student.getFirstNames(),
-                    student.getLastName(),
-                    getSafeName(jury.getPresident()),
-                    getSafeName(jury.getFirstMember()),
-                    getSafeName(jury.getSecondMember()),
-                    getSafeName(jury.getAccessory())
-            );
-        } else {
-            log.warn("No se encontró información del estudiante principal. No se enviará correo.");
-        }
-
-        if (studentTwo != null) {
-            log.info("Enviando correo al segundo estudiante: {}", studentTwo.getEmail());
-            emailService.sendJurys(
-                    studentTwo.getEmail(),
-                    "Información de Jurados Asignados",
-                    studentTwo.getFirstNames(),
-                    studentTwo.getLastName(),
-                    getSafeName(jury.getPresident()),
-                    getSafeName(jury.getFirstMember()),
-                    getSafeName(jury.getSecondMember()),
-                    getSafeName(jury.getAccessory())
-            );
-        } else {
-            log.warn("No se encontró información del segundo estudiante. No se enviará correo adicional.");
-        }
-    }
-
-
-    private String getSafeName(Teacher teacher) {
-        return teacher != null ? teacher.getFirstNames() : "No asignado";
-    }
-
-    private void createStepFourIfNeeded(JuryAppointmentStepThree jury) {
+    public void createStepFourIfNeeded(JuryAppointmentStepThree jury) {
         if (reportReviewStepFourRepository.findByJuryAppointmentStepThree(jury).isEmpty()) {
             ReportReviewStepFour stepFour = new ReportReviewStepFour();
             stepFour.setJuryAppointmentStepThree(jury);
@@ -154,18 +82,65 @@ public class JuryAppointmentStepThreeService {
         }
     }
 
-    private void logRelations(JuryAppointmentStepThree jury) {
-        log.info("Presidente: {}", jury.getPresident() != null ? jury.getPresident().getFirstNames() : "No asignado");
-        log.info("Primer Miembro: {}", jury.getFirstMember() != null ? jury.getFirstMember().getFirstNames() : "No asignado");
-        log.info("Segundo Miembro: {}", jury.getSecondMember() != null ? jury.getSecondMember().getFirstNames() : "No asignado");
-        log.info("Accesitario: {}", jury.getAccessory() != null ? jury.getAccessory().getFirstNames() : "No asignado");
+    public void sendJuryEmails(JuryAppointmentStepThree jury) {
+        try {
+            // Inicializar relaciones para asegurarnos de que estén disponibles
+            Hibernate.initialize(jury.getPresident());
+            Hibernate.initialize(jury.getFirstMember());
+            Hibernate.initialize(jury.getSecondMember());
+            Hibernate.initialize(jury.getAccessory());
+            Hibernate.initialize(jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudent());
+            Hibernate.initialize(jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudentTwo());
 
-        // Verificar inicialización de relaciones con Hibernate
-        log.info("Inicialización - Presidente: {}", Hibernate.isInitialized(jury.getPresident()));
-        log.info("Inicialización - Primer Miembro: {}", Hibernate.isInitialized(jury.getFirstMember()));
-        log.info("Inicialización - Segundo Miembro: {}", Hibernate.isInitialized(jury.getSecondMember()));
-        log.info("Inicialización - Accesitario: {}", Hibernate.isInitialized(jury.getAccessory()));
+            // Verificar si las relaciones están inicializadas correctamente
+            log.info("Inicialización - Presidente: {}", Hibernate.isInitialized(jury.getPresident()));
+            log.info("Inicialización - Primer Miembro: {}", Hibernate.isInitialized(jury.getFirstMember()));
+            log.info("Inicialización - Segundo Miembro: {}", Hibernate.isInitialized(jury.getSecondMember()));
+            log.info("Inicialización - Accesitario: {}", Hibernate.isInitialized(jury.getAccessory()));
+
+            var student = jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudent();
+            var studentTwo = jury.getProjectApprovalStepTwo().getTitleReservationStepOne().getStudentTwo();
+
+            if (student != null) {
+                log.info("Enviando correo al estudiante: {}", student.getEmail());
+                emailService.sendJurys(
+                        student.getEmail(),
+                        "Información de Jurados Asignados",
+                        student.getFirstNames(),
+                        student.getLastName(),
+                        jury.getPresident().getFirstNames(),
+                        jury.getFirstMember().getFirstNames(),
+                        jury.getSecondMember().getFirstNames(),
+                        jury.getAccessory().getFirstNames()
+                );
+            } else {
+                log.warn("El estudiante principal no está disponible, no se enviará correo.");
+            }
+
+            if (studentTwo != null) {
+                log.info("Enviando correo al segundo estudiante: {}", studentTwo.getEmail());
+                emailService.sendJurys(
+                        studentTwo.getEmail(),
+                        "Información de Jurados Asignados",
+                        studentTwo.getFirstNames(),
+                        studentTwo.getLastName(),
+                        jury.getPresident().getFirstNames(),
+                        jury.getFirstMember().getFirstNames(),
+                        jury.getSecondMember().getFirstNames(),
+                        jury.getAccessory().getFirstNames()
+                );
+            } else {
+                log.warn("No hay segundo estudiante, no se enviará correo adicional.");
+            }
+
+        } catch (Exception e) {
+            log.error("Error al enviar correos de jurados: {}", e.getMessage(), e);
+        }
     }
+
+
+
+
 
     public boolean deleteJuryAppointment(Long id) {
         if (juryAppointmentStepThreeRepository.existsById(id)) {
@@ -174,4 +149,5 @@ public class JuryAppointmentStepThreeService {
         }
         return false;
     }
+
 }

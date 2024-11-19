@@ -21,20 +21,20 @@ public class JuryAppointmentStepThree {
     @JoinColumn(name = "aprobacion_proyecto", referencedColumnName = "id_aprobacion_proyecto")
     private ProjectApprovalStepTwo projectApprovalStepTwo;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "presidente", referencedColumnName = "id_docente")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "presidente_id", referencedColumnName = "id_docente")
     private Teacher president;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "primer_miembro", referencedColumnName = "id_docente")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primer_miembro_id", referencedColumnName = "id_docente")
     private Teacher firstMember;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "segundo_miembro", referencedColumnName = "id_docente")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "segundo_miembro_id", referencedColumnName = "id_docente")
     private Teacher secondMember;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "accesitario" , referencedColumnName = "id_docente")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accesitario_id" , referencedColumnName = "id_docente")
     private Teacher accessory;
 
     @Column(name = "eliminado")

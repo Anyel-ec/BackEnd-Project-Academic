@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface JuryAppointmentStepThreeRepository extends JpaRepository<JuryAppointmentStepThree, Long>{
     @Query("SELECT j FROM JuryAppointmentStepThree j " +
-            "LEFT JOIN FETCH j.president " +
-            "LEFT JOIN FETCH j.firstMember " +
-            "LEFT JOIN FETCH j.secondMember " +
-            "LEFT JOIN FETCH j.accessory " +
+            "LEFT JOIN FETCH j.president p " +
+            "LEFT JOIN FETCH j.firstMember fm " +
+            "LEFT JOIN FETCH j.secondMember sm " +
+            "LEFT JOIN FETCH j.accessory a " +
             "WHERE j.id = :id")
     Optional<JuryAppointmentStepThree> findByIdWithRelations(@Param("id") Long id);
 }
