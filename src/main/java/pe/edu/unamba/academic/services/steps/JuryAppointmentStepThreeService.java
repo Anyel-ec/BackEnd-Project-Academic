@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
-import pe.edu.unamba.academic.models.actors.Teacher;
 import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
 import pe.edu.unamba.academic.models.steps.ReportReviewStepFour;
 import pe.edu.unamba.academic.repositories.steps.JuryAppointmentStepThreeRepository;
@@ -32,44 +31,6 @@ public class JuryAppointmentStepThreeService {
 
     public JuryAppointmentStepThree createJuryAppointment(JuryAppointmentStepThree juryAppointmentStepThree) {
         return juryAppointmentStepThreeRepository.save(juryAppointmentStepThree);
-    }
-
-    public Optional<JuryAppointmentStepThree> updateJuryAppointment(Long id, JuryAppointmentStepThree updatedJuryAppointment) {
-        return juryAppointmentStepThreeRepository.findByIdWithRelations(id).map(jurya -> {
-            // Actualizar campos no nulos
-            Optional<JuryAppointmentStepThree> result = juryAppointmentStepThreeRepository.findByIdWithRelations(id);
-            if (result.isPresent()) {
-                JuryAppointmentStepThree jury = result.get();
-
-                // Actualizar los campos requeridos del objeto
-                if (updatedJuryAppointment.getPresident() != null) {
-                    jurya.setPresident(updatedJuryAppointment.getPresident());
-                }
-                if (updatedJuryAppointment.getFirstMember() != null) {
-                    jurya.setFirstMember(updatedJuryAppointment.getFirstMember());
-                }
-                if (updatedJuryAppointment.getSecondMember() != null) {
-                    jurya.setSecondMember(updatedJuryAppointment.getSecondMember());
-                }
-                if (updatedJuryAppointment.getAccessory() != null) {
-                    jurya.setAccessory(updatedJuryAppointment.getAccessory());
-                }
-                jurya.setObservations(updatedJuryAppointment.getObservations());
-                jurya.setMeetRequirements(updatedJuryAppointment.isMeetRequirements());
-            }
-
-            // Guardar cambios
-            juryAppointmentStepThreeRepository.save(jurya);
-            log.info("Inicialización forzada completada.");
-
-            if (jurya.isMeetRequirements()) {
-                createStepFourIfNeeded(jurya);
-
-                // Enviar correos si cumple los requisitos
-                sendJuryEmails(jurya);
-            }
-            return jurya;
-        });
     }
 
     public void createStepFourIfNeeded(JuryAppointmentStepThree jury) {
@@ -137,10 +98,6 @@ public class JuryAppointmentStepThreeService {
             log.error("Error al enviar correos de jurados: {}", e.getMessage(), e);
         }
     }
-
-
-
-
 
     public boolean deleteJuryAppointment(Long id) {
         if (juryAppointmentStepThreeRepository.existsById(id)) {
