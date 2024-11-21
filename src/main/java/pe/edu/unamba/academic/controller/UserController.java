@@ -17,11 +17,9 @@ import pe.edu.unamba.academic.models.PasswordUpdateRequest;
 import pe.edu.unamba.academic.models.User;
 import pe.edu.unamba.academic.models.messages.request.LoginUser;
 import pe.edu.unamba.academic.models.messages.response.JsonResponse;
-import pe.edu.unamba.academic.security.jwt.JwtUtil;
 import pe.edu.unamba.academic.services.AutenticationServiceImpl;
 import pe.edu.unamba.academic.services.UserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
