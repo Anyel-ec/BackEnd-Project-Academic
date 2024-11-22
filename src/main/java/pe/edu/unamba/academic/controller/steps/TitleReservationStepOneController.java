@@ -23,11 +23,16 @@ public class TitleReservationStepOneController {
     private final TitleReservationStepOneService titleReservationStepOneService;
     private final TitleReservationStepOneRepository titleReservationStepOneRepository;
     private final PDFDocumentStepOneRepository pdfDocumentStepOneRepository;
+
     @GetMapping("/")
     public List<TitleReservationStepOne> getAllTitleReservations() {
         return titleReservationStepOneService.getAllTitleReservations();
     }
-
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<TitleReservationStepOne> getByStudentCode(@PathVariable String studentCode) {
+        Optional<TitleReservationStepOne> step = titleReservationStepOneRepository.findByStudent_StudentCode(studentCode);
+        return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<TitleReservationStepOne> getTitleReservationById(@PathVariable Long id) {
         return titleReservationStepOneService.getTitleReservationById(id)

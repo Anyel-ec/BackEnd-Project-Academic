@@ -1,7 +1,6 @@
 package pe.edu.unamba.academic.controller.steps;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.StepStatus;

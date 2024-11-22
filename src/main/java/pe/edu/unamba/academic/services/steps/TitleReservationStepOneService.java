@@ -41,7 +41,23 @@
     
         private static final Logger LOG = LoggerFactory.getLogger(TitleReservationStepOneService.class);
 
+        private TitleReservationStepOneRepository stepOneRepository;
 
+        public void TitleReservationService(TitleReservationStepOneRepository stepOneRepository) {
+            this.stepOneRepository = stepOneRepository;
+        }
+
+        public Optional<TitleReservationStepOne> getStepByStudentCode(String studentCode) {
+            return stepOneRepository.findByStudent_StudentCode(studentCode);
+        }
+
+        public List<TitleReservationStepOne> searchStepsByTitle(String keyword) {
+            return stepOneRepository.findByTitleContaining(keyword);
+        }
+
+        public boolean doesTitleExist(String title) {
+            return stepOneRepository.existsByTitle(title);
+        }
         public List<TitleReservationStepOne> searchTitleReservationsByTitle(String title) {
             return titleReservationStepOneRepository.findByTitleContaining(title);
         }
