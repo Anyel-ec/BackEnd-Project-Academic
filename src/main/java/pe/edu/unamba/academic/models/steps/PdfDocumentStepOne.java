@@ -12,7 +12,7 @@
     @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
     @Slf4j
     @Table(name = "documentos_paso_1")
-    public class PDFDocumentStepOne {
+    public class PdfDocumentStepOne {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "pdf_document_id")

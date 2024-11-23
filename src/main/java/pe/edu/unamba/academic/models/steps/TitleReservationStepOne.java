@@ -44,7 +44,7 @@ public class TitleReservationStepOne {
 
     @OneToOne
     @JoinColumn(name = "id_documento_pdf")
-    private PDFDocumentStepOne pdfDocument;
+    private PdfDocumentStepOne pdfDocument;
 
     @ManyToOne
     @JoinColumn(name = "id_linea_de_reserva", nullable = true)

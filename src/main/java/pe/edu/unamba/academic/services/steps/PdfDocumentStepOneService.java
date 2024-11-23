@@ -2,19 +2,17 @@ package pe.edu.unamba.academic.services.steps;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pe.edu.unamba.academic.models.steps.PDFDocumentStepOne;
-import pe.edu.unamba.academic.repositories.steps.PDFDocumentStepOneRepository;
+import pe.edu.unamba.academic.models.steps.PdfDocumentStepOne;
+import pe.edu.unamba.academic.repositories.steps.PdfDocumentStepOneRepository;
 
-import java.util.List;
-import java.util.Optional;
 @RequiredArgsConstructor
 @Service
-public class PDFDocumentStepOneService {
+public class PdfDocumentStepOneService {
 
-    private final PDFDocumentStepOneRepository pdfDocumentStepOneRepository;
+    private final PdfDocumentStepOneRepository pdfDocumentStepOneRepository;
 
-    public PDFDocumentStepOne savePDFDocument(String pdfData) {
-        PDFDocumentStepOne pdfDocument = new PDFDocumentStepOne();
+    public PdfDocumentStepOne savePDFDocument(String pdfData) {
+        PdfDocumentStepOne pdfDocument = new PdfDocumentStepOne();
         pdfDocument.setPdfData(pdfData);  // Se guarda el PDF en base64
         return pdfDocumentStepOneRepository.save(pdfDocument);
     }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
+import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
 import pe.edu.unamba.academic.services.steps.ProjectApprovalStepTwoService;
 
 import java.util.List;
@@ -13,10 +14,11 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/aprobacion_proyecto")
+    @RequestMapping("/api/v1/aprobacion_proyecto")
 public class ProjectApprovalStepTwoController {
 
     private final ProjectApprovalStepTwoService projectApprovalStepTwoService;
+    private final ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
 
     // Obtener todas las aprobaciones de proyectos
     @GetMapping
@@ -32,11 +34,18 @@ public class ProjectApprovalStepTwoController {
         return approval.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     // Crear una nueva aprobación de proyecto
     @PostMapping
     public ResponseEntity<ProjectApprovalStepTwo> createProjectApproval(@Valid @RequestBody ProjectApprovalStepTwo projectApprovalStepTwo) {
         ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoService.createProjectApproval(projectApprovalStepTwo);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedApproval);
+    }
+
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<ProjectApprovalStepTwo> getByStudentCode(@PathVariable String studentCode) {
+        Optional<ProjectApprovalStepTwo> step = projectApprovalStepTwoRepository.findByTitleReservationStepOne_Student_StudentCode(studentCode);
+        return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     // Actualizar una aprobación de proyecto existente

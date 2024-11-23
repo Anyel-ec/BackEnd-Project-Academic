@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.unamba.academic.models.steps.PDFDocumentStepOne;
+import pe.edu.unamba.academic.models.steps.PdfDocumentStepOne;
 import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
-import pe.edu.unamba.academic.repositories.steps.PDFDocumentStepOneRepository;
+import pe.edu.unamba.academic.repositories.steps.PdfDocumentStepOneRepository;
 import pe.edu.unamba.academic.repositories.steps.TitleReservationStepOneRepository;
 import pe.edu.unamba.academic.services.steps.TitleReservationStepOneService;
 
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class TitleReservationStepOneController {
     private final TitleReservationStepOneService titleReservationStepOneService;
     private final TitleReservationStepOneRepository titleReservationStepOneRepository;
-    private final PDFDocumentStepOneRepository pdfDocumentStepOneRepository;
+    private final PdfDocumentStepOneRepository pdfDocumentStepOneRepository;
 
     @GetMapping("/")
     public List<TitleReservationStepOne> getAllTitleReservations() {
@@ -47,7 +47,7 @@ public class TitleReservationStepOneController {
             TitleReservationStepOne reservation = reservationOpt.get();
 
             // Crea y guarda el documento PDF
-            PDFDocumentStepOne pdfDocument = new PDFDocumentStepOne();
+            PdfDocumentStepOne pdfDocument = new PdfDocumentStepOne();
             pdfDocument.setPdfData(pdfData.get("pdfData"));
             pdfDocument = pdfDocumentStepOneRepository.save(pdfDocument);
 

@@ -9,5 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectApprovalStepTwoRepository extends JpaRepository<ProjectApprovalStepTwo, Long> {
-    Optional<? extends ProjectApprovalStepTwo> findByTitleReservationStepOne(TitleReservationStepOne s1);
+    Optional<ProjectApprovalStepTwo> findByTitleReservationStepOne(TitleReservationStepOne titleReservationStepOne);
+    Optional<ProjectApprovalStepTwo> findByTitleReservationStepOne_Student_StudentCode(String studentCode);
+
 }

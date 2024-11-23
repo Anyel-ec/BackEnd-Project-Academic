@@ -32,6 +32,18 @@ public class StudentProgressService {
 
         // Step 1: Title Reservation
         Optional<TitleReservationStepOne> stepOne = stepOneRepository.findByStudent_StudentCode(studentCode);
+        processTitleReservationStep(progressList, stepOne);
+
+        // Step 2: Project Approval
+        Optional<ProjectApprovalStepTwo> stepTwo = stepTwoRepository.findByTitleReservationStepOne(stepOne.orElse(null));
+        processProjectApprovalStep(progressList, stepTwo);
+
+        // Additional steps can be added here following the same pattern
+
+        return progressList;
+    }
+
+    private void processTitleReservationStep(List<StudentProgress> progressList, Optional<TitleReservationStepOne> stepOne) {
         double stepOneCompletion = 0.0;
         boolean stepOneCompleted = false;
 
@@ -48,14 +60,34 @@ public class StudentProgressService {
         }
 
         progressList.add(new StudentProgress(
-                "Title Reservation",
+                "1",
                 stepOneCompleted,
                 stepOneCompletion,
                 stepOne.orElse(null)
         ));
+    }
 
-        // Additional steps...
+    private void processProjectApprovalStep(List<StudentProgress> progressList, Optional<ProjectApprovalStepTwo> stepTwo) {
+        double stepTwoCompletion = 0.0;
+        boolean stepTwoCompleted = false;
 
-        return progressList;
+        if (stepTwo.isPresent()) {
+            ProjectApprovalStepTwo stepTwoData = stepTwo.get();
+            stepTwoCompleted = stepTwoData.isApprovedProject();
+            if (stepTwoData.isApprovedProject()) {
+                stepTwoCompletion = 100.0;
+            } else if (stepTwoData.getObservations() != null && !stepTwoData.getObservations().isEmpty()) {
+                stepTwoCompletion = 50.0; // Assuming having observations means partial progress
+            } else {
+                stepTwoCompletion = 10.0; // Minimal progress if the step is created but not yet approved
+            }
+        }
+
+        progressList.add(new StudentProgress(
+                "2",
+                stepTwoCompleted,
+                stepTwoCompletion,
+                stepTwo.orElse(null)
+        ));
     }
 }
