@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-@Table(name="p6_aprobacion_tesis")
+@Table(name="p7_aprobacion_tesis")
 public class ThesisApprovalStepSeven {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

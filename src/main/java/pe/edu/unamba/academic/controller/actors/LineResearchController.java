@@ -1,4 +1,4 @@
-package pe.edu.unamba.academic.controllers;
+package pe.edu.unamba.academic.controller.actors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

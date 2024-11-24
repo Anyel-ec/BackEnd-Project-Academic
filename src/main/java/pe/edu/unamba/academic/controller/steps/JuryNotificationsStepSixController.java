@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/notificacion_jurado")
+@RequestMapping(path = "/api/v1/notificacion_jurados")
 public class JuryNotificationsStepSixController {
 
     private final JuryNotificationsStepSixService juryNotificationsService;

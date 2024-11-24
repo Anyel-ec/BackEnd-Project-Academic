@@ -2,6 +2,8 @@ package pe.edu.unamba.academic.security.jwt;
 
 
 import java.io.IOException;
+
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.unamba.academic.security.UserDetailsServiceImpl;
 
+@RequiredArgsConstructor
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    JwtUtil jwtUtil;
 
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
+
+    private final UserDetailsServiceImpl userDetailsService;
 
     private final static Logger LOG = LoggerFactory.getLogger(JwtTokenFilter.class);
 

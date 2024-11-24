@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
-@Table(name="p7_notificacion_jurados")
+@Table(name="p6_notificacion_jurados")
 public class JuryNotificationsStepSix {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

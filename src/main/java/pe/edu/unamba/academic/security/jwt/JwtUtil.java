@@ -1,8 +1,10 @@
 package pe.edu.unamba.academic.security.jwt;
 
 
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +19,7 @@ import io.jsonwebtoken.io.Decoders;
 import pe.edu.unamba.academic.models.User;
 import pe.edu.unamba.academic.security.UsuarioPrincipal;
 
+@RequiredArgsConstructor
 @Component
 public class JwtUtil {
     private static final Logger LOG = LoggerFactory.getLogger(JwtUtil.class);
@@ -75,9 +78,9 @@ public class JwtUtil {
     }
 
     private SecretKey getSecret(String secret) {
-        byte[] secretBytes = Decoders.BASE64URL.decode(secret);
-        return Keys.hmacShaKeyFor(secretBytes);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
+
 
     public String encryptar(String password) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();

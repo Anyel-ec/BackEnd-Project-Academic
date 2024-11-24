@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.steps.ConstancyThesisStepFive;
+import pe.edu.unamba.academic.models.steps.ReportReviewStepFour;
 import pe.edu.unamba.academic.repositories.steps.ConstancyThesisStepFiveRepository;
+import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
+import pe.edu.unamba.academic.repositories.steps.JuryNotificationsStepSixRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,7 @@ import java.util.Optional;
 @Slf4j
 public class ConstancyThesisStepFiveService {
     private final ConstancyThesisStepFiveRepository constancyThesisStepFiveRepository;
+    private final JuryNotificationsStepSixService juryNotificationsStepSixService;
 
     public List<ConstancyThesisStepFive> getAllConstancyThesis() {
         return constancyThesisStepFiveRepository.findAll();
@@ -26,29 +30,24 @@ public class ConstancyThesisStepFiveService {
     }
     public Optional<ConstancyThesisStepFive> updateConstancyThesis(Long id, ConstancyThesisStepFive updatedConstancyThesis) {
         log.info("Actualizando la constancia de tesis con ID: {}", id);
-        return Optional.ofNullable(constancyThesisStepFiveRepository.findById(id)
-                .map(existingThesis -> {
-                    updateFields(existingThesis, updatedConstancyThesis);
-                    log.info("Constancia de tesis actualizada con éxito para el ID: {}", id);
+        return constancyThesisStepFiveRepository.findById(id).map(existingThesis -> {
+                    if (updatedConstancyThesis.getReportReviewStepFour() != null){
+                        existingThesis.setReportReviewStepFour(updatedConstancyThesis.getReportReviewStepFour());
+                    }
+                    if (updatedConstancyThesis.getObservations() != null){
+                        existingThesis.setObservations(updatedConstancyThesis.getObservations());
+                    }
+                    existingThesis.setMeetsRequirements(updatedConstancyThesis.isMeetsRequirements());
+                    existingThesis.setDisable(updatedConstancyThesis.isDisable());
+                    if(updatedConstancyThesis.isMeetsRequirements()){
+                        JuryNotificationsStepSix newJuryNotifications = new JuryNotificationsStepSix();
+                        newJuryNotifications.setConstancyThesisStepFive(existingThesis);
+                        newJuryNotifications.setObservations(existingThesis.getObservations());
+                        newJuryNotifications.setMeetRequirements(false);
+                        juryNotificationsStepSixService.saveOrUpdateJuryNotification(newJuryNotifications);
+                    }
                     return constancyThesisStepFiveRepository.save(existingThesis);
-                })
-                .orElseGet(() -> {
-                    log.warn("No se encontró la constancia de tesis con ID: {}", id);
-                    return null; // O lanzar una excepción si se espera que la constancia siempre exista
-                }));
-    }
-
-    private void updateFields(ConstancyThesisStepFive existingThesis, ConstancyThesisStepFive updatedThesis) {
-        if (updatedThesis.getReportReviewStepFour() != null) {
-            existingThesis.setReportReviewStepFour(updatedThesis.getReportReviewStepFour());
-        }
-        if (updatedThesis.getObservations() != null) {
-            existingThesis.setObservations(updatedThesis.getObservations());
-        }
-        // Asegura que `meetsRequirements` se actualiza incluso si es false
-        existingThesis.setMeetsRequirements(updatedThesis.isMeetsRequirements());
-
-        // Aquí puedes agregar más campos para actualizar según sea necesario
+                });
     }
 
 
