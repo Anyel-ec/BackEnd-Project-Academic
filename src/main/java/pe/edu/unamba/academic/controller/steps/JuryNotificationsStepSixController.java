@@ -10,13 +10,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/notificacion_jurados")
+@RequestMapping("/api/v1/notificacion_jurados")
 public class JuryNotificationsStepSixController {
 
     private final JuryNotificationsStepSixService juryNotificationsService;
 
     // Obtener todas las notificaciones de jurado
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<JuryNotificationsStepSix>> getAll() {
         List<JuryNotificationsStepSix> notifications = juryNotificationsService.getJuryNotifications();
         return ResponseEntity.ok(notifications);
@@ -25,15 +25,21 @@ public class JuryNotificationsStepSixController {
     // Obtener una notificación de jurado por ID
     @GetMapping("/{id}")
     public ResponseEntity<JuryNotificationsStepSix> getById(@PathVariable Long id) {
-        return juryNotificationsService.getJuryNotification(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return juryNotificationsService.getJuryNotification(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear o actualizar una notificación de jurado
-    @PostMapping
-    public ResponseEntity<Void> saveUpdate(@RequestBody JuryNotificationsStepSix juryNotificationsStepSix) {
-        juryNotificationsService.saveOrUpdateJuryNotification(juryNotificationsStepSix);
+    // Crear una nueva notificación de jurado
+    @PostMapping("/")
+    public ResponseEntity<Void> save(@RequestBody JuryNotificationsStepSix juryNotificationsStepSix) {
+        juryNotificationsService.saveJuryNotification(juryNotificationsStepSix);
+        return ResponseEntity.ok().build();
+    }
+
+    // Actualizar una notificación de jurado existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody JuryNotificationsStepSix juryNotificationsStepSix) {
+        juryNotificationsStepSix.setId(id); // Asegurarse de que el ID coincida
+        juryNotificationsService.updateJuryNotification(juryNotificationsStepSix);
         return ResponseEntity.ok().build();
     }
 

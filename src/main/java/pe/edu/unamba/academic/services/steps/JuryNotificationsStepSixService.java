@@ -26,12 +26,35 @@ public class JuryNotificationsStepSixService {
         );
     }
 
-    public void saveOrUpdateJuryNotification(JuryNotificationsStepSix juryNotification) {
-        if (juryNotification.getId() != null && !stepSixRepository.existsById(juryNotification.getId())) {
-            throw new ResourceNotFoundException("Cannot update: Jury Notification not found with id: {0}", juryNotification.getId());
+    public void saveJuryNotification(JuryNotificationsStepSix juryNotification) {
+        if (juryNotification.getId() != null) {
+            throw new IllegalArgumentException("New Jury Notification should not have an ID. Use the update method instead.");
         }
         stepSixRepository.save(juryNotification);
     }
+
+    public void updateJuryNotification(JuryNotificationsStepSix juryNotification) {
+        // Verifica si el registro existe
+        JuryNotificationsStepSix existingNotification = stepSixRepository.findById(juryNotification.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot update: Jury Notification not found with id: {0}", juryNotification.getId()));
+
+        // Actualiza solo los campos necesarios
+
+            existingNotification.setMeetRequirements(juryNotification.isMeetRequirements());
+
+        if (juryNotification.getObservations() != null) {
+            existingNotification.setObservations(juryNotification.getObservations());
+        }
+        if (juryNotification.getThesisDate() != null) {
+            existingNotification.setThesisDate(juryNotification.getThesisDate());
+        }
+
+        // Puedes agregar más campos según el modelo
+
+        // Guarda el objeto combinado
+        stepSixRepository.save(existingNotification);
+    }
+
 
     public void deleteJuryNotification(Long id) {
         if (!stepSixRepository.existsById(id)) {

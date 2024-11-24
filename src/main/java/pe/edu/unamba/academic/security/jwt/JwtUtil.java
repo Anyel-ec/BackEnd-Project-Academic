@@ -1,7 +1,5 @@
 package pe.edu.unamba.academic.security.jwt;
 
-
-import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import pe.edu.unamba.academic.models.User;
 import pe.edu.unamba.academic.security.UsuarioPrincipal;
 
@@ -51,7 +48,6 @@ public class JwtUtil {
                 .compact();
     }
 
-
     public String getNombreUsuarioFromToken(String token) {
         Jws<Claims> parsed = Jwts.parser().verifyWith(getSecret(secret)).build().parseSignedClaims(token);
         return parsed.getPayload().getSubject();
@@ -80,7 +76,6 @@ public class JwtUtil {
     private SecretKey getSecret(String secret) {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
-
 
     public String encryptar(String password) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();

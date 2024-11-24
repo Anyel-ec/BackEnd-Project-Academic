@@ -44,7 +44,7 @@ public class ConstancyThesisStepFiveService {
                         newJuryNotifications.setConstancyThesisStepFive(existingThesis);
                         newJuryNotifications.setObservations(existingThesis.getObservations());
                         newJuryNotifications.setMeetRequirements(false);
-                        juryNotificationsStepSixService.saveOrUpdateJuryNotification(newJuryNotifications);
+                        juryNotificationsStepSixService.saveJuryNotification(newJuryNotifications);
                     }
                     return constancyThesisStepFiveRepository.save(existingThesis);
                 });
