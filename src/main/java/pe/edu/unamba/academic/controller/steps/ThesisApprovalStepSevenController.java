@@ -16,7 +16,7 @@ public class ThesisApprovalStepSevenController {
     private final ThesisApprovalStepSevenService thesisApprovalStepSevenService;
 
     // Obtener todos los registros
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<ThesisApprovalStepSeven>> getAll() {
         List<ThesisApprovalStepSeven> approvals = thesisApprovalStepSevenService.getThesisApprovals();
         return ResponseEntity.ok(approvals);
@@ -37,9 +37,17 @@ public class ThesisApprovalStepSevenController {
         return ResponseEntity.ok().build();
     }
 
-    // Actualizar un registro existente
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody ThesisApprovalStepSeven thesisApprovalStepSeven) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ThesisApprovalStepSeven thesisApprovalStepSeven) {
+        if (!thesisApprovalStepSevenService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (thesisApprovalStepSeven.getObservations() == null || thesisApprovalStepSeven.getObservations().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        thesisApprovalStepSeven.setId(id);
         thesisApprovalStepSevenService.updateApproval(thesisApprovalStepSeven);
         return ResponseEntity.ok().build();
     }

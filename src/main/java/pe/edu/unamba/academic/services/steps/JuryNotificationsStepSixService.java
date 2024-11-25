@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.exceptions.ResourceNotFoundException;
 import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
+import pe.edu.unamba.academic.models.steps.ThesisApprovalStepSeven;
 import pe.edu.unamba.academic.repositories.steps.JuryNotificationsStepSixRepository;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.Optional;
 public class JuryNotificationsStepSixService {
 
     private final JuryNotificationsStepSixRepository stepSixRepository;
-
+    private final ThesisApprovalStepSevenService thesisApprovalStepSevenService;
     public List<JuryNotificationsStepSix> getJuryNotifications() {
         return stepSixRepository.findAll();
     }
@@ -38,8 +39,6 @@ public class JuryNotificationsStepSixService {
         JuryNotificationsStepSix existingNotification = stepSixRepository.findById(juryNotification.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cannot update: Jury Notification not found with id: {0}", juryNotification.getId()));
 
-        // Actualiza solo los campos necesarios
-
             existingNotification.setMeetRequirements(juryNotification.isMeetRequirements());
 
         if (juryNotification.getObservations() != null) {
@@ -50,7 +49,10 @@ public class JuryNotificationsStepSixService {
         }
 
         if (juryNotification.isMeetRequirements()){
-
+            ThesisApprovalStepSeven newThesisApproval = new ThesisApprovalStepSeven();
+            newThesisApproval.setJuryNotificationsStepSix(existingNotification);
+            newThesisApproval.setMeetRequirements(false);
+            thesisApprovalStepSevenService.saveApproval(newThesisApproval);
         }
 
         // Guarda el objeto combinado

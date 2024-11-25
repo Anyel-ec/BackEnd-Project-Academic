@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.steps.ConstancyThesisStepFive;
-import pe.edu.unamba.academic.models.steps.ReportReviewStepFour;
 import pe.edu.unamba.academic.repositories.steps.ConstancyThesisStepFiveRepository;
 import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
-import pe.edu.unamba.academic.repositories.steps.JuryNotificationsStepSixRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +40,6 @@ public class ConstancyThesisStepFiveService {
                     if(updatedConstancyThesis.isMeetsRequirements()){
                         JuryNotificationsStepSix newJuryNotifications = new JuryNotificationsStepSix();
                         newJuryNotifications.setConstancyThesisStepFive(existingThesis);
-                        newJuryNotifications.setObservations(existingThesis.getObservations());
                         newJuryNotifications.setMeetRequirements(false);
                         juryNotificationsStepSixService.saveJuryNotification(newJuryNotifications);
                     }

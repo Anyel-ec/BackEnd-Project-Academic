@@ -16,7 +16,7 @@ public class PastingApprovalStepEightController {
     private final PastingApprovalStepEightService pastingApprovalService;
 
     // Obtener todos los registros
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<PastingApprovalStepEight>> getAll() {
         List<PastingApprovalStepEight> list = pastingApprovalService.getAll();
         return ResponseEntity.ok(list);
@@ -30,10 +30,18 @@ public class PastingApprovalStepEightController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Guardar o actualizar un registro
+    // Guardar un nuevo registro
     @PostMapping
-    public ResponseEntity<Void> saveUpdate( @RequestBody PastingApprovalStepEight pastingApprovalStepEight) {
-        pastingApprovalService.saveOrUpdate(pastingApprovalStepEight);
+    public ResponseEntity<Void> save(@RequestBody PastingApprovalStepEight pastingApprovalStepEight) {
+        pastingApprovalService.save(pastingApprovalStepEight);
+        return ResponseEntity.ok().build();
+    }
+
+    // Actualizar un registro existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody PastingApprovalStepEight pastingApprovalStepEight) {
+        pastingApprovalStepEight.setId(id); // Asegura que el ID de la URL se use
+        pastingApprovalService.update(pastingApprovalStepEight);
         return ResponseEntity.ok().build();
     }
 
