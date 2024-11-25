@@ -26,8 +26,17 @@ public class ThesisApprovalStepSevenService {
         );
     }
 
-    public void saveOrUpdateApproval(ThesisApprovalStepSeven thesisApprovalStepSeven) {
-        if (thesisApprovalStepSeven.getId() != null && !repository.existsById(thesisApprovalStepSeven.getId())) {
+    // Método para guardar un nuevo registro
+    public void saveApproval(ThesisApprovalStepSeven thesisApprovalStepSeven) {
+        if (thesisApprovalStepSeven.getId() != null) {
+            throw new IllegalArgumentException("New Thesis Approval must not have an ID");
+        }
+        repository.save(thesisApprovalStepSeven);
+    }
+
+    // Método para actualizar un registro existente
+    public void updateApproval(ThesisApprovalStepSeven thesisApprovalStepSeven) {
+        if (thesisApprovalStepSeven.getId() == null || !repository.existsById(thesisApprovalStepSeven.getId())) {
             throw new ResourceNotFoundException("Cannot update: Thesis Approval not found with id: {0}", thesisApprovalStepSeven.getId());
         }
         repository.save(thesisApprovalStepSeven);

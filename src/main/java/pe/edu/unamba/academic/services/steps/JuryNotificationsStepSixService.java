@@ -49,7 +49,9 @@ public class JuryNotificationsStepSixService {
             existingNotification.setThesisDate(juryNotification.getThesisDate());
         }
 
-        // Puedes agregar más campos según el modelo
+        if (juryNotification.isMeetRequirements()){
+
+        }
 
         // Guarda el objeto combinado
         stepSixRepository.save(existingNotification);

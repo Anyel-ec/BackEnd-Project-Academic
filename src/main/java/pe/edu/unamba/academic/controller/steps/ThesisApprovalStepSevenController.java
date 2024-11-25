@@ -30,10 +30,17 @@ public class ThesisApprovalStepSevenController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear o actualizar un registro
+    // Crear un nuevo registro
     @PostMapping
-    public ResponseEntity<Void> saveUpdate( @RequestBody ThesisApprovalStepSeven thesisApprovalStepSeven) {
-        thesisApprovalStepSevenService.saveOrUpdateApproval(thesisApprovalStepSeven);
+    public ResponseEntity<Void> save(@RequestBody ThesisApprovalStepSeven thesisApprovalStepSeven) {
+        thesisApprovalStepSevenService.saveApproval(thesisApprovalStepSeven);
+        return ResponseEntity.ok().build();
+    }
+
+    // Actualizar un registro existente
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody ThesisApprovalStepSeven thesisApprovalStepSeven) {
+        thesisApprovalStepSevenService.updateApproval(thesisApprovalStepSeven);
         return ResponseEntity.ok().build();
     }
 
@@ -44,3 +51,4 @@ public class ThesisApprovalStepSevenController {
         return ResponseEntity.noContent().build();
     }
 }
+
