@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface JuryAppointmentStepThreeRepository extends JpaRepository<JuryAppointmentStepThree, Long>{
+    Optional<JuryAppointmentStepThree> findByProjectApprovalStepTwo_TitleReservationStepOne_Student_StudentCode(String studentCode);
+
     @Query("SELECT j FROM JuryAppointmentStepThree j " +
             "LEFT JOIN FETCH j.president p " +
             "LEFT JOIN FETCH j.firstMember fm " +

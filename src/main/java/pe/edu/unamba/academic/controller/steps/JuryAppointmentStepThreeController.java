@@ -34,6 +34,11 @@ public class JuryAppointmentStepThreeController {
         return jury.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
 
     }
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<JuryAppointmentStepThree> getByStudentCode(@PathVariable String studentCode) {
+        Optional<JuryAppointmentStepThree> step = juryRepository.findByProjectApprovalStepTwo_TitleReservationStepOne_Student_StudentCode(studentCode);
+        return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
     @PostMapping
     public ResponseEntity<JuryAppointmentStepThree> createJuryAppointment(@Valid @RequestBody JuryAppointmentStepThree juryAppointmentStepThree) {
         JuryAppointmentStepThree savedJury = juryAppointmentStepThreeService.createJuryAppointment(juryAppointmentStepThree);

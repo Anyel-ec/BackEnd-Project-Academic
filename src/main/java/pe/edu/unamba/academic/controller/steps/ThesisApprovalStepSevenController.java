@@ -43,10 +43,6 @@ public class ThesisApprovalStepSevenController {
             return ResponseEntity.notFound().build();
         }
 
-        if (thesisApprovalStepSeven.getObservations() == null || thesisApprovalStepSeven.getObservations().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
         thesisApprovalStepSeven.setId(id);
         thesisApprovalStepSevenService.updateApproval(thesisApprovalStepSeven);
         return ResponseEntity.ok().build();
