@@ -45,7 +45,9 @@ public class ThesisApprovalStepSevenService {
         }
         repository.save(thesisApprovalStepSeven);
     }
-
+    public Optional<ThesisApprovalStepSeven> getThesisApprovalByStudentCode(String studentCode) {
+        return repository.findByAnyStudentCodeNative(studentCode);
+    }
     @Transactional
     public void updateApproval(ThesisApprovalStepSeven thesisApprovalStepSeven) {
         // Verifica si el registro existe

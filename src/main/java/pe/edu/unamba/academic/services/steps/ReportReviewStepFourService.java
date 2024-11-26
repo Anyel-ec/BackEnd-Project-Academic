@@ -28,8 +28,8 @@ public class ReportReviewStepFourService {
     public ReportReviewStepFour createReportReview(ReportReviewStepFour reportReviewStepFour) {
         return reportReviewStepFourRepository.save(reportReviewStepFour);
     }
-    public Optional<ReportReviewStepFour> getReportReviewByAnyStudentCode(String studentCode) {
-        return reportReviewStepFourRepository.findByAnyStudentCode(studentCode);
+    public Optional<ReportReviewStepFour> getReportReviewByStudentCode(String studentCode) {
+        return reportReviewStepFourRepository.findByAnyStudentCodeNative(studentCode);
     }
     public Optional<ReportReviewStepFour> updateReportReview(Long id, ReportReviewStepFour updatedReportReview) {
         return reportReviewStepFourRepository.findById(id).map(report -> {

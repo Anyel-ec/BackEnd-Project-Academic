@@ -1,12 +1,14 @@
 package pe.edu.unamba.academic.controller.steps;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
 import pe.edu.unamba.academic.services.steps.JuryNotificationsStepSixService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,7 +44,15 @@ public class JuryNotificationsStepSixController {
         juryNotificationsService.updateJuryNotification(juryNotificationsStepSix);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<?> getNotificationsByStudentCode(@PathVariable String studentCode) {
+        Optional<JuryNotificationsStepSix> notifications = juryNotificationsService.getNotificationsByStudentCode(studentCode);
+        if (notifications.isPresent()) {
+            return ResponseEntity.ok(notifications.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron notificaciones al jurado para el código de estudiante proporcionado.");
+        }
+    }
     // Eliminar una notificación de jurado por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

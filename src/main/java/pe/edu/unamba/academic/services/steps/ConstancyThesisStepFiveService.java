@@ -26,6 +26,9 @@ public class ConstancyThesisStepFiveService {
     public ConstancyThesisStepFive createConstancyThesis(ConstancyThesisStepFive constancyThesisStepFive) {
         return constancyThesisStepFiveRepository.save(constancyThesisStepFive);
     }
+    public Optional<ConstancyThesisStepFive> getConstancyByStudentCode(String studentCode) {
+        return constancyThesisStepFiveRepository.findByAnyStudentCodeNative(studentCode);
+    }
     public Optional<ConstancyThesisStepFive> updateConstancyThesis(Long id, ConstancyThesisStepFive updatedConstancyThesis) {
         log.info("Actualizando la constancia de tesis con ID: {}", id);
         return constancyThesisStepFiveRepository.findById(id).map(existingThesis -> {

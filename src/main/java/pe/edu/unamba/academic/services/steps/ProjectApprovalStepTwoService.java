@@ -29,7 +29,7 @@ public class ProjectApprovalStepTwoService {
     }
 
     public Optional<ProjectApprovalStepTwo> getApprovalByStudentCode(String studentCode) {
-        return projectApprovalStepTwoRepository.findByAnyStudentCode(studentCode);
+        return projectApprovalStepTwoRepository.findByAnyStudentCodeNative(studentCode);
     }
     // Crear una nueva aprobación de proyecto
     public ProjectApprovalStepTwo createProjectApproval(ProjectApprovalStepTwo projectApprovalStepTwo) {

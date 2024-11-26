@@ -52,11 +52,10 @@ public class ProjectApprovalStepTwoController {
     @GetMapping("/student/{studentCode}")
     public ResponseEntity<?> getApprovalByStudentCode(@PathVariable String studentCode) {
         Optional<ProjectApprovalStepTwo> approval = projectApprovalStepTwoService.getApprovalByStudentCode(studentCode);
-
         if (approval.isPresent()) {
             return ResponseEntity.ok(approval.get());
         } else {
-            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una aprobación para el código de estudiante proporcionado");
         }
     }
     // Eliminar una aprobación de proyecto por ID

@@ -30,7 +30,16 @@ public class ConstancyThesisStepFiveController {
     public ResponseEntity<List<ConstancyThesisStepFive>> getAllConstancyThesis() {
         List<ConstancyThesisStepFive> thesis = constancyThesisStepFiveService.getAllConstancyThesis();
         return ResponseEntity.ok(thesis);
+    }@GetMapping("/student/{studentCode}")
+    public ResponseEntity<?> getConstancyByStudentCode(@PathVariable String studentCode) {
+        Optional<ConstancyThesisStepFive> constancy = constancyThesisStepFiveService.getConstancyByStudentCode(studentCode);
+        if (constancy.isPresent()) {
+            return ResponseEntity.ok(constancy.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una constancia de tesis para el código de estudiante proporcionado.");
+        }
     }
+
     @PostMapping("/{id}/uploadPdf")
     public ResponseEntity<Map<String, String>> uploadPdf(@PathVariable Long id, @RequestBody Map<String, String> pdfData) {
         // Busca la tesis por su ID

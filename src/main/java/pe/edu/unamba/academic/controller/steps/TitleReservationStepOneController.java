@@ -30,17 +30,12 @@ public class TitleReservationStepOneController {
         return titleReservationStepOneService.getAllTitleReservations();
     }
     @GetMapping("/student/{studentCode}")
-    public ResponseEntity<?> getTitleReservationByStudentCode(@PathVariable String studentCode) {
+    public ResponseEntity<TitleReservationStepOne> getReservationByStudentCode(@PathVariable String studentCode) {
         try {
-            Optional<TitleReservationStepOne> reservation = titleReservationStepOneService.getTitleReservationByAnyStudentCode(studentCode);
-
-            if (reservation.isPresent()) {
-                return ResponseEntity.ok(reservation.get());
-            } else {
-                return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
-            }
+            TitleReservationStepOne reservation = titleReservationStepOneService.getReservationByStudentCode(studentCode);
+            return ResponseEntity.ok(reservation);
         } catch (RuntimeException e) {
-            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
     @GetMapping("/{id}")

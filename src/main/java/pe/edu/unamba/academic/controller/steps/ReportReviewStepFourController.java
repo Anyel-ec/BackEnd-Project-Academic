@@ -38,12 +38,12 @@ public class ReportReviewStepFourController {
     }
     @GetMapping("/student/{studentCode}")
     public ResponseEntity<?> getReportReviewByStudentCode(@PathVariable String studentCode) {
-        Optional<ReportReviewStepFour> reportReview = reportReviewStepFourService.getReportReviewByAnyStudentCode(studentCode);
-
+        Optional<ReportReviewStepFour> reportReview = reportReviewStepFourService.getReportReviewByStudentCode(studentCode);
         if (reportReview.isPresent()) {
             return ResponseEntity.ok(reportReview.get());
         } else {
-            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);}
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una revisión de reporte para el código de estudiante proporcionado.");
+        }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReportReviewStepFourById(@PathVariable Long id) {

@@ -12,9 +12,15 @@ import java.util.Optional;
 @Repository
 public interface ProjectApprovalStepTwoRepository extends JpaRepository<ProjectApprovalStepTwo, Long> {
     Optional<ProjectApprovalStepTwo> findByTitleReservationStepOne(TitleReservationStepOne titleReservationStepOne);
-    @Query("SELECT p FROM ProjectApprovalStepTwo p " +
-            "WHERE p.titleReservationStepOne.student.studentCode = :studentCode " +
-            "OR p.titleReservationStepOne.studentTwo.studentCode = :studentCode")
-    Optional<ProjectApprovalStepTwo> findByAnyStudentCode(@Param("studentCode") String studentCode);
+
+    @Query(value = "SELECT p.* " +
+            "FROM p2_aprobacion_proyecto p " +
+            "LEFT JOIN p1_reservacion_titulo t ON p.reservacion_titulo = t.id_reservacion_titulo " +
+            "LEFT JOIN alumnos s1 ON t.id_student = s1.id " +
+            "LEFT JOIN alumnos s2 ON t.id_student_two = s2.id " +
+            "WHERE s1.codigo_alumno = :studentCode " +
+            "   OR (s2.id IS NOT NULL AND s2.codigo_alumno = :studentCode)",
+            nativeQuery = true)
+    Optional<ProjectApprovalStepTwo> findByAnyStudentCodeNative(@Param("studentCode") String studentCode);
 
 }

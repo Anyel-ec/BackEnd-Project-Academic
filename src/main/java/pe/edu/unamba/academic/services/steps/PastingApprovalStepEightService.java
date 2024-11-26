@@ -27,7 +27,9 @@ public class PastingApprovalStepEightService {
                         .orElseThrow(() -> new ResourceNotFoundException("Pasting Approval not found with id: {0}", id))
         );
     }
-
+    public Optional<PastingApprovalStepEight> getPastingApprovalByStudentCode(String studentCode) {
+        return repository.findByAnyStudentCodeNative(studentCode);
+    }
     public void save(PastingApprovalStepEight pastingApprovalStepEight) {
         if (pastingApprovalStepEight.getId() != null) {
             throw new IllegalArgumentException("New records cannot have an ID");

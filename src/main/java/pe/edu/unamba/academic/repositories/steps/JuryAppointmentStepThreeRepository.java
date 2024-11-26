@@ -14,11 +14,16 @@ public interface JuryAppointmentStepThreeRepository extends JpaRepository<JuryAp
     // Busca por studentCode del estudiante principal
     // Optional<JuryAppointmentStepThree> findByProjectApprovalStepTwo_TitleReservationStepOne_Student_StudentCode(String studentCode);
 
-    // Consulta personalizada para buscar por cualquier studentCode (principal o secundario)
-    @Query("SELECT j FROM JuryAppointmentStepThree j " +
-            "WHERE j.projectApprovalStepTwo.titleReservationStepOne.student.studentCode = :studentCode " +
-            "OR j.projectApprovalStepTwo.titleReservationStepOne.studentTwo.studentCode = :studentCode")
-    Optional<JuryAppointmentStepThree> findByAnyStudentCode(@Param("studentCode") String studentCode);
+    @Query(value = "SELECT j.* " +
+            "FROM p3_designacion_jurado j " +
+            "LEFT JOIN p2_aprobacion_proyecto p ON j.aprobacion_proyecto = p.id_aprobacion_proyecto " +
+            "LEFT JOIN p1_reservacion_titulo t ON p.reservacion_titulo = t.id_reservacion_titulo " +
+            "LEFT JOIN alumnos s1 ON t.id_student = s1.id " +
+            "LEFT JOIN alumnos s2 ON t.id_student_two = s2.id " +
+            "WHERE s1.codigo_alumno = :studentCode " +
+            "   OR (s2.id IS NOT NULL AND s2.codigo_alumno = :studentCode)",
+            nativeQuery = true)
+    Optional<JuryAppointmentStepThree> findByAnyStudentCodeNative(@Param("studentCode") String studentCode);
 
     // Consulta para obtener relaciones asociadas al jurado
     @Query("SELECT j FROM JuryAppointmentStepThree j " +

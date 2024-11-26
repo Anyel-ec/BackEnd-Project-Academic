@@ -26,7 +26,9 @@ public class JuryNotificationsStepSixService {
                         .orElseThrow(() -> new ResourceNotFoundException("Jury Notification not found with id: {0}", id))
         );
     }
-
+    public Optional<JuryNotificationsStepSix> getNotificationsByStudentCode(String studentCode) {
+        return stepSixRepository.findByAnyStudentCodeNative(studentCode);
+    }
     public void saveJuryNotification(JuryNotificationsStepSix juryNotification) {
         if (juryNotification.getId() != null) {
             throw new IllegalArgumentException("New Jury Notification should not have an ID. Use the update method instead.");

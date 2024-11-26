@@ -15,10 +15,14 @@ public interface TitleReservationStepOneRepository extends JpaRepository<TitleRe
     List<TitleReservationStepOne> findByTitleContaining(@Param("title") String title);
 
     // Find a TitleReservationStepOne by student code or studentTwo code, handling null values
-    @Query("SELECT t FROM TitleReservationStepOne t " +
-            "WHERE (t.student IS NOT NULL AND t.student.studentCode = :studentCode) " +
-            "OR (t.studentTwo IS NOT NULL AND t.studentTwo.studentCode = :studentCode)")
-    Optional<TitleReservationStepOne> findByAnyStudentCode(@Param("studentCode") String studentCode);
+    @Query(value = "SELECT t.* " +
+            "FROM p1_reservacion_titulo t " +
+            "LEFT JOIN alumnos s1 ON t.id_student = s1.id " +
+            "LEFT JOIN alumnos s2 ON t.id_student_two = s2.id " +
+            "WHERE s1.codigo_alumno = :studentCode OR (s2.id IS NOT NULL AND s2.codigo_alumno = :studentCode)",
+            nativeQuery = true)
+    Optional<TitleReservationStepOne> findByAnyStudentCodeNative(@Param("studentCode") String studentCode);
+
     // Find a TitleReservationStepOne by exact title
     Optional<TitleReservationStepOne> findByTitle(String title);
 

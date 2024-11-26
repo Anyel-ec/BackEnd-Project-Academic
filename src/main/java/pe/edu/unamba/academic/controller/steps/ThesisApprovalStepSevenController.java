@@ -1,12 +1,14 @@
 package pe.edu.unamba.academic.controller.steps;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.ThesisApprovalStepSeven;
 import pe.edu.unamba.academic.services.steps.ThesisApprovalStepSevenService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,7 +49,15 @@ public class ThesisApprovalStepSevenController {
         thesisApprovalStepSevenService.updateApproval(thesisApprovalStepSeven);
         return ResponseEntity.ok().build();
     }
-
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<?> getThesisApprovalByStudentCode(@PathVariable String studentCode) {
+        Optional<ThesisApprovalStepSeven> thesisApproval = thesisApprovalStepSevenService.getThesisApprovalByStudentCode(studentCode);
+        if (thesisApproval.isPresent()) {
+            return ResponseEntity.ok(thesisApproval.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una aprobación de tesis para el código de estudiante proporcionado.");
+        }
+    }
     // Eliminar un registro por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
