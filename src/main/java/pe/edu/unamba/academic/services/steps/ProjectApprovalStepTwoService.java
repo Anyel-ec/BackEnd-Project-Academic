@@ -28,6 +28,9 @@ public class ProjectApprovalStepTwoService {
         return projectApprovalStepTwoRepository.findById(id);
     }
 
+    public Optional<ProjectApprovalStepTwo> getApprovalByStudentCode(String studentCode) {
+        return projectApprovalStepTwoRepository.findByAnyStudentCode(studentCode);
+    }
     // Crear una nueva aprobación de proyecto
     public ProjectApprovalStepTwo createProjectApproval(ProjectApprovalStepTwo projectApprovalStepTwo) {
         return projectApprovalStepTwoRepository.save(projectApprovalStepTwo);

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.unamba.academic.models.steps.ConstancyThesisStepFive;
 import pe.edu.unamba.academic.models.steps.PdfDocumentStepFive;
+import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
 import pe.edu.unamba.academic.repositories.steps.ConstancyThesisStepFiveRepository;
 import pe.edu.unamba.academic.repositories.steps.PdfDocumentStepFiveRepository;
 import pe.edu.unamba.academic.services.steps.ConstancyThesisStepFiveService;

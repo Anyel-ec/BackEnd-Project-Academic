@@ -36,7 +36,7 @@ public class JuryAppointmentStepThreeController {
     }
     @GetMapping("/student/{studentCode}")
     public ResponseEntity<JuryAppointmentStepThree> getByStudentCode(@PathVariable String studentCode) {
-        Optional<JuryAppointmentStepThree> step = juryRepository.findByProjectApprovalStepTwo_TitleReservationStepOne_Student_StudentCode(studentCode);
+        Optional<JuryAppointmentStepThree> step = juryAppointmentStepThreeService.getJuryByAnyStudentCode(studentCode);
         return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping

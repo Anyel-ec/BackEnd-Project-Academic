@@ -31,7 +31,7 @@ public class StudentProgressService {
         List<StudentProgress> progressList = new ArrayList<>();
 
         // Step 1: Title Reservation
-        Optional<TitleReservationStepOne> stepOne = stepOneRepository.findByStudent_StudentCode(studentCode);
+        Optional<TitleReservationStepOne> stepOne = stepOneRepository.findByAnyStudentCode(studentCode);
         processTitleReservationStep(progressList, stepOne);
 
         // Step 2: Project Approval

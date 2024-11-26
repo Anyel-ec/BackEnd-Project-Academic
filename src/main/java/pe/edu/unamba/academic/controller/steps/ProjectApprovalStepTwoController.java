@@ -42,11 +42,6 @@ public class ProjectApprovalStepTwoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedApproval);
     }
 
-    @GetMapping("/student/{studentCode}")
-    public ResponseEntity<ProjectApprovalStepTwo> getByStudentCode(@PathVariable String studentCode) {
-        Optional<ProjectApprovalStepTwo> step = projectApprovalStepTwoRepository.findByTitleReservationStepOne_Student_StudentCode(studentCode);
-        return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
 
     // Actualizar una aprobación de proyecto existente
     @PutMapping("/{id}")
@@ -54,7 +49,16 @@ public class ProjectApprovalStepTwoController {
         Optional<Optional<ProjectApprovalStepTwo>> savedApproval = projectApprovalStepTwoService.updateProjectApproval(id, updatedProjectApproval);
         return savedApproval.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<?> getApprovalByStudentCode(@PathVariable String studentCode) {
+        Optional<ProjectApprovalStepTwo> approval = projectApprovalStepTwoService.getApprovalByStudentCode(studentCode);
 
+        if (approval.isPresent()) {
+            return ResponseEntity.ok(approval.get());
+        } else {
+            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+        }
+    }
     // Eliminar una aprobación de proyecto por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProjectApproval(@PathVariable Long id) {

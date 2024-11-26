@@ -9,16 +9,21 @@ import java.util.Optional;
 
 @Repository
 public interface TitleReservationStepOneRepository extends JpaRepository<TitleReservationStepOne, Long> {
+
     // Find steps where the title contains the provided string
     @Query("SELECT t FROM TitleReservationStepOne t WHERE t.title LIKE %:title%")
     List<TitleReservationStepOne> findByTitleContaining(@Param("title") String title);
 
-    // Find a TitleReservationStepOne by student code
-    Optional<TitleReservationStepOne> findByStudent_StudentCode(String studentCode);
-
+    // Find a TitleReservationStepOne by student code or studentTwo code, handling null values
+    @Query("SELECT t FROM TitleReservationStepOne t " +
+            "WHERE (t.student IS NOT NULL AND t.student.studentCode = :studentCode) " +
+            "OR (t.studentTwo IS NOT NULL AND t.studentTwo.studentCode = :studentCode)")
+    Optional<TitleReservationStepOne> findByAnyStudentCode(@Param("studentCode") String studentCode);
     // Find a TitleReservationStepOne by exact title
     Optional<TitleReservationStepOne> findByTitle(String title);
 
     // Check if a title already exists
     boolean existsByTitle(String title);
 }
+
+

@@ -32,7 +32,9 @@ public class JuryAppointmentStepThreeService {
     public JuryAppointmentStepThree createJuryAppointment(JuryAppointmentStepThree juryAppointmentStepThree) {
         return juryAppointmentStepThreeRepository.save(juryAppointmentStepThree);
     }
-
+    public Optional<JuryAppointmentStepThree> getJuryByAnyStudentCode(String studentCode) {
+        return juryAppointmentStepThreeRepository.findByAnyStudentCode(studentCode);
+    }
     public void createStepFourIfNeeded(JuryAppointmentStepThree jury) {
         if (reportReviewStepFourRepository.findByJuryAppointmentStepThree(jury).isEmpty()) {
             ReportReviewStepFour stepFour = new ReportReviewStepFour();

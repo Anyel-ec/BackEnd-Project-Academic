@@ -1,5 +1,6 @@
 package pe.edu.unamba.academic.controller.steps;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,9 +30,18 @@ public class TitleReservationStepOneController {
         return titleReservationStepOneService.getAllTitleReservations();
     }
     @GetMapping("/student/{studentCode}")
-    public ResponseEntity<TitleReservationStepOne> getByStudentCode(@PathVariable String studentCode) {
-        Optional<TitleReservationStepOne> step = titleReservationStepOneRepository.findByStudent_StudentCode(studentCode);
-        return step.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getTitleReservationByStudentCode(@PathVariable String studentCode) {
+        try {
+            Optional<TitleReservationStepOne> reservation = titleReservationStepOneService.getTitleReservationByAnyStudentCode(studentCode);
+
+            if (reservation.isPresent()) {
+                return ResponseEntity.ok(reservation.get());
+            } else {
+                return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return (ResponseEntity<?>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<TitleReservationStepOne> getTitleReservationById(@PathVariable Long id) {

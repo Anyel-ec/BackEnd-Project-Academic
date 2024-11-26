@@ -43,12 +43,10 @@
 
         private TitleReservationStepOneRepository stepOneRepository;
 
-        public void TitleReservationService(TitleReservationStepOneRepository stepOneRepository) {
-            this.stepOneRepository = stepOneRepository;
-        }
 
         public Optional<TitleReservationStepOne> getStepByStudentCode(String studentCode) {
-            return stepOneRepository.findByStudent_StudentCode(studentCode);
+            LOG.info("Buscando reservación de título para el código de estudiante: {}", studentCode);
+            return titleReservationStepOneRepository.findByAnyStudentCode(studentCode);
         }
 
         public List<TitleReservationStepOne> searchStepsByTitle(String keyword) {
@@ -202,7 +200,20 @@
                 return false;
             }
         }
-    
+        public Optional<TitleReservationStepOne> getTitleReservationByAnyStudentCode(String studentCode) {
+            try {
+                Optional<TitleReservationStepOne> reservation = titleReservationStepOneRepository.findByAnyStudentCode(studentCode);
+
+                if (reservation.isEmpty()) {
+                    LOG.warn("No se encontró ninguna reservación para el código de estudiante: {}", studentCode);
+                }
+
+                return reservation;
+            } catch (Exception e) {
+                LOG.error("Error al buscar reservación de título para el código de estudiante {}: {}", studentCode, e.getMessage());
+                throw new RuntimeException("Error al buscar reservación de título. Verifique los registros del servidor.");
+            }
+        }
         @Transactional
         public TitleReservationStepOne updateTitleReservation(Long id, TitleReservationStepOne titleReservationDetails) {
             return titleReservationStepOneRepository.findById(id).map(existingReservation -> {

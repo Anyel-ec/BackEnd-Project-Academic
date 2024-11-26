@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @Table(name = "step_status")
 @JsonIgnoreProperties(value = "createdAt")
 public class StepStatus {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +26,5 @@ public class StepStatus {
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
-
 
 }
