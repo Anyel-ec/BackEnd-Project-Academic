@@ -231,7 +231,7 @@
                     projectApproval.setAdviser(null);
                     projectApproval.setCoadviser(null);
                     projectApproval.setIsDisable(false);
-                    projectApproval.setApprovedProject(false);
+                    projectApproval.setMeetRequirements(false);
                     projectApproval.setObservations(null);
     
                     projectApprovalStepTwoRepository.save(projectApproval);

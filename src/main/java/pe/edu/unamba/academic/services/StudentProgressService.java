@@ -97,30 +97,31 @@ public class StudentProgressService {
         if (step.isPresent()) {
             Object stepData = step.get();
 
-            if (stepData instanceof ProjectApprovalStepTwo) {
-                stepCompleted = ((ProjectApprovalStepTwo) stepData).isApprovedProject();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((ProjectApprovalStepTwo) stepData).getObservations() != null && !((ProjectApprovalStepTwo) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
-            } else if (stepData instanceof JuryAppointmentStepThree) {
-                stepCompleted = ((JuryAppointmentStepThree) stepData).isMeetRequirements();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((JuryAppointmentStepThree) stepData).getObservations() != null && !((JuryAppointmentStepThree) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
-            } else if (stepData instanceof ReportReviewStepFour) {
-                stepCompleted = ((ReportReviewStepFour) stepData).isMeetRequirements();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((ReportReviewStepFour) stepData).getObservations() != null && !((ReportReviewStepFour) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
-            } else if (stepData instanceof JuryNotificationsStepSix) {
-                stepCompleted = ((JuryNotificationsStepSix) stepData).isMeetRequirements();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((JuryNotificationsStepSix) stepData).getObservations() != null && !((JuryNotificationsStepSix) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
-            } else if (stepData instanceof ThesisApprovalStepSeven) {
-                stepCompleted = ((ThesisApprovalStepSeven) stepData).isMeetRequirements();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((ThesisApprovalStepSeven) stepData).getObservations() != null && !((ThesisApprovalStepSeven) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
-            } else if (stepData instanceof PastingApprovalStepEight) {
-                stepCompleted = ((PastingApprovalStepEight) stepData).isMeetRequirements();
-                stepCompletion = stepCompleted ? 100.0 :
-                        (((PastingApprovalStepEight) stepData).getObservations() != null && !((PastingApprovalStepEight) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            // Ajuste para los pasos específicos
+            if (stepData instanceof ProjectApprovalStepTwo ||
+                    stepData instanceof JuryAppointmentStepThree ||
+                    stepData instanceof ReportReviewStepFour ||
+                    stepData instanceof JuryNotificationsStepSix ||
+                    stepData instanceof ThesisApprovalStepSeven ||
+                    stepData instanceof PastingApprovalStepEight) {
+
+                // Determinar si el paso cumple con los requisitos
+                if (stepData instanceof ProjectApprovalStepTwo) {
+                    stepCompleted = ((ProjectApprovalStepTwo) stepData).isMeetRequirements();
+                } else if (stepData instanceof JuryAppointmentStepThree) {
+                    stepCompleted = ((JuryAppointmentStepThree) stepData).isMeetRequirements();
+                } else if (stepData instanceof ReportReviewStepFour) {
+                    stepCompleted = ((ReportReviewStepFour) stepData).isMeetRequirements();
+                } else if (stepData instanceof JuryNotificationsStepSix) {
+                    stepCompleted = ((JuryNotificationsStepSix) stepData).isMeetRequirements();
+                } else if (stepData instanceof ThesisApprovalStepSeven) {
+                    stepCompleted = ((ThesisApprovalStepSeven) stepData).isMeetRequirements();
+                } else if (stepData instanceof PastingApprovalStepEight) {
+                    stepCompleted = ((PastingApprovalStepEight) stepData).isMeetRequirements();
+                }
+
+                // Aplicar la lógica específica
+                stepCompletion = stepCompleted ? 100.0 : 50.0;
             }
         }
 

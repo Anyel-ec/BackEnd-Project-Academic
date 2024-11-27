@@ -49,6 +49,7 @@ public class ProjectApprovalStepTwoController {
         Optional<Optional<ProjectApprovalStepTwo>> savedApproval = projectApprovalStepTwoService.updateProjectApproval(id, updatedProjectApproval);
         return savedApproval.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @GetMapping("/student/{studentCode}")
     public ResponseEntity<?> getApprovalByStudentCode(@PathVariable String studentCode) {
         Optional<ProjectApprovalStepTwo> approval = projectApprovalStepTwoService.getApprovalByStudentCode(studentCode);

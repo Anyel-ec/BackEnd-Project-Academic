@@ -32,8 +32,8 @@ public class ProjectApprovalStepTwo {
     @Column(name = "eliminado")
     private Boolean isDisable = false;
 
-    @Column(name="proyecto_aprobado")
-    private boolean approvedProject = false;
+    @Column(name = "cumple_requisitos") // Asegúrate de actualizar el nombre en la base de datos si es necesario
+    private boolean meetRequirements = false;
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;

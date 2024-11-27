@@ -43,14 +43,15 @@ public class ProjectApprovalStepTwoService {
             approval.setAdviser(updatedProjectApproval.getAdviser());
             approval.setIsDisable(updatedProjectApproval.getIsDisable());
             approval.setCoadviser(updatedProjectApproval.getCoadviser());
-            approval.setApprovedProject(updatedProjectApproval.isApprovedProject());
+            approval.setMeetRequirements(updatedProjectApproval.isMeetRequirements());
             approval.setObservations(updatedProjectApproval.getObservations());
 
             // Guardar la aprobación de proyecto actualizada
             ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoRepository.save(approval);
 
             // Crear el paso de asignación de jurados si el proyecto está aprobado
-            if (savedApproval.isApprovedProject()) {
+            // Crear el paso de asignación de jurados si el proyecto cumple con los requisitos
+            if (savedApproval.isMeetRequirements()) {
                 JuryAppointmentStepThree juryAppointment = new JuryAppointmentStepThree();
                 juryAppointment.setProjectApprovalStepTwo(savedApproval);
                 juryAppointment.setPresident(null);
@@ -63,7 +64,6 @@ public class ProjectApprovalStepTwoService {
                 // Guardar la asignación de jurados
                 juryAppointmentStepThreeRepository.save(juryAppointment);
             }
-
             return Optional.of(savedApproval);
         });
     }
