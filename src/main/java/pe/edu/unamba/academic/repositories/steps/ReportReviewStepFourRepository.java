@@ -23,4 +23,5 @@ public interface ReportReviewStepFourRepository extends JpaRepository<ReportRevi
             "   OR (s2.id IS NOT NULL AND s2.codigo_alumno = :studentCode)",
             nativeQuery = true)
     Optional<ReportReviewStepFour> findByAnyStudentCodeNative(@Param("studentCode") String studentCode);
+
 }

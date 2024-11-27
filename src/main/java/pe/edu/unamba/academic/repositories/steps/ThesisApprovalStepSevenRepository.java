@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
 import pe.edu.unamba.academic.models.steps.ThesisApprovalStepSeven;
 
 import java.util.Optional;
 
 @Repository
 public interface ThesisApprovalStepSevenRepository extends JpaRepository<ThesisApprovalStepSeven, Long> {
+    Optional<ThesisApprovalStepSeven> findByJuryNotificationsStepSix(JuryNotificationsStepSix stepSix);
+
     @Query(value = "SELECT a.* " +
             "FROM p7_aprobacion_tesis a " +
             "LEFT JOIN p6_notificacion_jurados n ON a.notificacion_jurados = n.id_notificacion_jurados " +

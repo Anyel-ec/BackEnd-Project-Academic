@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pe.edu.unamba.academic.models.steps.ConstancyThesisStepFive;
 import pe.edu.unamba.academic.models.steps.JuryNotificationsStepSix;
 
 import java.util.Optional;
 
 @Repository
 public interface JuryNotificationsStepSixRepository extends JpaRepository<JuryNotificationsStepSix,Long > {
+    Optional<JuryNotificationsStepSix> findByConstancyThesisStepFive(ConstancyThesisStepFive stepFive);
+
     @Query(value = "SELECT n.* " +
             "FROM p6_notificacion_jurados n " +
             "LEFT JOIN p5_constancia_tesis c ON n.id_constancia_tesis = c.id_constancia_tesis " +

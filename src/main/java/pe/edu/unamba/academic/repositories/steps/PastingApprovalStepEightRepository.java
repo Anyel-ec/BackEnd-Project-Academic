@@ -5,11 +5,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pe.edu.unamba.academic.models.steps.PastingApprovalStepEight;
+import pe.edu.unamba.academic.models.steps.ThesisApprovalStepSeven;
 
 import java.util.Optional;
 
 @Repository
 public interface PastingApprovalStepEightRepository extends JpaRepository<PastingApprovalStepEight, Long> {
+    Optional<PastingApprovalStepEight> findByThesisApprovalStepSeven(ThesisApprovalStepSeven stepSeven);
+
 
     @Query(value = "SELECT e.* " +
             "FROM p8_aprobacion_empastados e " +

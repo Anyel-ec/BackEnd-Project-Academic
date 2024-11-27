@@ -25,15 +25,7 @@ public interface JuryAppointmentStepThreeRepository extends JpaRepository<JuryAp
             nativeQuery = true)
     Optional<JuryAppointmentStepThree> findByAnyStudentCodeNative(@Param("studentCode") String studentCode);
 
-    // Consulta para obtener relaciones asociadas al jurado
-    @Query("SELECT j FROM JuryAppointmentStepThree j " +
-            "LEFT JOIN FETCH j.president p " +
-            "LEFT JOIN FETCH j.firstMember fm " +
-            "LEFT JOIN FETCH j.secondMember sm " +
-            "LEFT JOIN FETCH j.accessory a " +
-            "WHERE j.id = :id")
-    Optional<JuryAppointmentStepThree> findByIdWithRelations(@Param("id") Long id);
+
 
     // Busca por projectApprovalStepTwo
-    Optional<? extends JuryAppointmentStepThree> findByProjectApprovalStepTwo(ProjectApprovalStepTwo s2);
-}
+    Optional<JuryAppointmentStepThree> findByProjectApprovalStepTwo(ProjectApprovalStepTwo stepTwo);}

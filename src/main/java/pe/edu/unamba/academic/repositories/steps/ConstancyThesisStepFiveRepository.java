@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ConstancyThesisStepFiveRepository extends JpaRepository<ConstancyThesisStepFive, Long> {
+    Optional<ConstancyThesisStepFive> findByReportReviewStepFour(ReportReviewStepFour stepFour);
+
     @Query(value = "SELECT c.* " +
             "FROM p5_constancia_tesis c " +
             "LEFT JOIN p4_revision_reporte r ON c.revision_reporte = r.id_revision_reporte " +

@@ -30,15 +30,38 @@ public class StudentProgressService {
     public List<StudentProgress> getProgressByStudent(String studentCode) {
         List<StudentProgress> progressList = new ArrayList<>();
 
-         // Step 1: Title Reservation
+        // Step 1: Title Reservation
         Optional<TitleReservationStepOne> stepOne = stepOneRepository.findByAnyStudentCodeNative(studentCode);
         processTitleReservationStep(progressList, stepOne);
 
-        // Step 2: Project Approval
+// Step 2: Project Approval
         Optional<ProjectApprovalStepTwo> stepTwo = stepTwoRepository.findByTitleReservationStepOne(stepOne.orElse(null));
-        processProjectApprovalStep(progressList, stepTwo);
+        processGenericStep(progressList, stepTwo, "2");
 
-        // Additional steps can be added here following the same pattern
+// Step 3: Jury Appointment
+        Optional<JuryAppointmentStepThree> stepThree = stepThreeRepository.findByProjectApprovalStepTwo(stepTwo.orElse(null));
+        processGenericStep(progressList, stepThree, "3");
+
+// Step 4: Report Review
+        Optional<ReportReviewStepFour> stepFour = stepFourRepository.findByJuryAppointmentStepThree(stepThree.orElse(null));
+        processGenericStep(progressList, stepFour, "4");
+
+// Step 5: Constancy Thesis
+        Optional<ConstancyThesisStepFive> stepFive = stepFiveRepository.findByReportReviewStepFour(stepFour.orElse(null));
+        processConstancyThesisStep(progressList, stepFive);
+
+// Step 6: Jury Notifications
+        Optional<JuryNotificationsStepSix> stepSix = stepSixRepository.findByConstancyThesisStepFive(stepFive.orElse(null));
+        processGenericStep(progressList, stepSix, "6");
+
+// Step 7: Thesis Approval
+        Optional<ThesisApprovalStepSeven> stepSeven = stepSevenRepository.findByJuryNotificationsStepSix(stepSix.orElse(null));
+        processGenericStep(progressList, stepSeven, "7");
+
+// Step 8: Pasting Approval
+        Optional<PastingApprovalStepEight> stepEight = stepEightRepository.findByThesisApprovalStepSeven(stepSeven.orElse(null));
+        processGenericStep(progressList, stepEight, "8");
+
 
         return progressList;
     }
@@ -67,27 +90,69 @@ public class StudentProgressService {
         ));
     }
 
-    private void processProjectApprovalStep(List<StudentProgress> progressList, Optional<ProjectApprovalStepTwo> stepTwo) {
-        double stepTwoCompletion = 0.0;
-        boolean stepTwoCompleted = false;
+    private void processGenericStep(List<StudentProgress> progressList, Optional<?> step, String stepNumber) {
+        double stepCompletion = 0.0;
+        boolean stepCompleted = false;
 
-        if (stepTwo.isPresent()) {
-            ProjectApprovalStepTwo stepTwoData = stepTwo.get();
-            stepTwoCompleted = stepTwoData.isApprovedProject();
-            if (stepTwoData.isApprovedProject()) {
-                stepTwoCompletion = 100.0;
-            } else if (stepTwoData.getObservations() != null && !stepTwoData.getObservations().isEmpty()) {
-                stepTwoCompletion = 50.0; // Assuming having observations means partial progress
-            } else {
-                stepTwoCompletion = 10.0; // Minimal progress if the step is created but not yet approved
+        if (step.isPresent()) {
+            Object stepData = step.get();
+
+            if (stepData instanceof ProjectApprovalStepTwo) {
+                stepCompleted = ((ProjectApprovalStepTwo) stepData).isApprovedProject();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((ProjectApprovalStepTwo) stepData).getObservations() != null && !((ProjectApprovalStepTwo) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            } else if (stepData instanceof JuryAppointmentStepThree) {
+                stepCompleted = ((JuryAppointmentStepThree) stepData).isMeetRequirements();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((JuryAppointmentStepThree) stepData).getObservations() != null && !((JuryAppointmentStepThree) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            } else if (stepData instanceof ReportReviewStepFour) {
+                stepCompleted = ((ReportReviewStepFour) stepData).isMeetRequirements();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((ReportReviewStepFour) stepData).getObservations() != null && !((ReportReviewStepFour) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            } else if (stepData instanceof JuryNotificationsStepSix) {
+                stepCompleted = ((JuryNotificationsStepSix) stepData).isMeetRequirements();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((JuryNotificationsStepSix) stepData).getObservations() != null && !((JuryNotificationsStepSix) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            } else if (stepData instanceof ThesisApprovalStepSeven) {
+                stepCompleted = ((ThesisApprovalStepSeven) stepData).isMeetRequirements();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((ThesisApprovalStepSeven) stepData).getObservations() != null && !((ThesisApprovalStepSeven) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
+            } else if (stepData instanceof PastingApprovalStepEight) {
+                stepCompleted = ((PastingApprovalStepEight) stepData).isMeetRequirements();
+                stepCompletion = stepCompleted ? 100.0 :
+                        (((PastingApprovalStepEight) stepData).getObservations() != null && !((PastingApprovalStepEight) stepData).getObservations().isEmpty()) ? 50.0 : 10.0;
             }
         }
 
         progressList.add(new StudentProgress(
-                "2",
-                stepTwoCompleted,
-                stepTwoCompletion,
-                stepTwo.orElse(null)
+                stepNumber,
+                stepCompleted,
+                stepCompletion,
+                step.orElse(null)
+        ));
+    }
+
+    private void processConstancyThesisStep(List<StudentProgress> progressList, Optional<ConstancyThesisStepFive> stepFive) {
+        double stepFiveCompletion = 0.0;
+        boolean stepFiveCompleted = false;
+
+        if (stepFive.isPresent()) {
+            ConstancyThesisStepFive stepFiveData = stepFive.get();
+            stepFiveCompleted = stepFiveData.isMeetsRequirements();
+            if (stepFiveData.isMeetsRequirements()) {
+                stepFiveCompletion = 100.0;
+            } else if (stepFiveData.getPdfDocument() != null) {
+                stepFiveCompletion = 75.0;
+            } else {
+                stepFiveCompletion = 30.0;
+            }
+        }
+
+        progressList.add(new StudentProgress(
+                "5",
+                stepFiveCompleted,
+                stepFiveCompletion,
+                stepFive.orElse(null)
         ));
     }
 }
