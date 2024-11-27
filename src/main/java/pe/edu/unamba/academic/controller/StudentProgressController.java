@@ -23,5 +23,14 @@ public class StudentProgressController {
         }
         return ResponseEntity.ok(progress);
     }
+    @GetMapping("/todos")
+    public ResponseEntity<List<StudentProgress>> getAllStudentsProgress() {
+        List<StudentProgress> allProgress = studentProgressService.getProgressForAllStudents();
+        if (allProgress.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(allProgress);
+    }
+
 }
 

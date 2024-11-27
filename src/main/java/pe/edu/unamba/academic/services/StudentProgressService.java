@@ -65,7 +65,23 @@ public class StudentProgressService {
 
         return progressList;
     }
+    public List<StudentProgress> getProgressForAllStudents() {
+        List<StudentProgress> allProgress = new ArrayList<>();
 
+        // Obtener todos los estudiantes
+        List<String> allStudentCodes = studentRepository.findAllStudentCodes();
+
+        for (String studentCode : allStudentCodes) {
+            // Obtener progreso por estudiante
+            List<StudentProgress> studentProgress = getProgressByStudent(studentCode);
+            // Filtrar los pasos con porcentaje > 0 y añadirlos a la lista final
+            allProgress.addAll(studentProgress.stream()
+                    .filter(progress -> progress.getCompletionPercentage() > 0)
+                    .toList());
+        }
+
+        return allProgress;
+    }
     private void processTitleReservationStep(List<StudentProgress> progressList, Optional<TitleReservationStepOne> stepOne) {
         double stepOneCompletion = 0.0;
         boolean stepOneCompleted = false;
