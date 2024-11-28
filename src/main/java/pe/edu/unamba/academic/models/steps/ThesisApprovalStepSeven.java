@@ -23,7 +23,7 @@ public class ThesisApprovalStepSeven {
     @Column(name = "eliminado")
     private Boolean isDisable = false;
 
-    @Column(name="cumple_requisitos")
+    @Column(name = "cumple_requerimientos")
     private boolean meetRequirements = false;
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT")

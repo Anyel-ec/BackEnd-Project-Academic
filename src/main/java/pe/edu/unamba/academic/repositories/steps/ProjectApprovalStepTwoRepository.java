@@ -11,7 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectApprovalStepTwoRepository extends JpaRepository<ProjectApprovalStepTwo, Long> {
-    Optional<ProjectApprovalStepTwo> findByTitleReservationStepOne(TitleReservationStepOne titleReservationStepOne);
+
+    @Query("SELECT p FROM ProjectApprovalStepTwo p WHERE p.titleReservationStepOne.id = :titleReservationId")
+    Optional<ProjectApprovalStepTwo> findByTitleReservationStepOne(@Param("titleReservationId") Long titleReservationId);
 
     @Query(value = "SELECT p.* " +
             "FROM p2_aprobacion_proyecto p " +

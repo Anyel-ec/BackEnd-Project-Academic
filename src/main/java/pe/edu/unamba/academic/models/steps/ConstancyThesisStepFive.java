@@ -30,7 +30,7 @@ public class ConstancyThesisStepFive {
     private String observations;
 
     @Column(name = "cumple_requerimientos")
-    private boolean meetsRequirements;
+    private boolean meetsRequirements = false;
 
     @Column(name = "eliminado", columnDefinition = "boolean default false")
     private boolean isDisable;

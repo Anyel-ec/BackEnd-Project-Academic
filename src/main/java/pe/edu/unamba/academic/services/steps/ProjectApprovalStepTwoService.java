@@ -43,7 +43,7 @@ public class ProjectApprovalStepTwoService {
             approval.setAdviser(updatedProjectApproval.getAdviser());
             approval.setIsDisable(updatedProjectApproval.getIsDisable());
             approval.setCoadviser(updatedProjectApproval.getCoadviser());
-            approval.setMeetRequirements(updatedProjectApproval.isMeetRequirements());
+            approval.setMeetRequirements(updatedProjectApproval.getMeetRequirements());
             approval.setObservations(updatedProjectApproval.getObservations());
 
             // Guardar la aprobación de proyecto actualizada
@@ -51,7 +51,7 @@ public class ProjectApprovalStepTwoService {
 
             // Crear el paso de asignación de jurados si el proyecto está aprobado
             // Crear el paso de asignación de jurados si el proyecto cumple con los requisitos
-            if (savedApproval.isMeetRequirements()) {
+            if (savedApproval.getMeetRequirements()) {
                 JuryAppointmentStepThree juryAppointment = new JuryAppointmentStepThree();
                 juryAppointment.setProjectApprovalStepTwo(savedApproval);
                 juryAppointment.setPresident(null);

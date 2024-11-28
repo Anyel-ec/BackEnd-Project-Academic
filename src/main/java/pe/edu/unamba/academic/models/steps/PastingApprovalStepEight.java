@@ -20,7 +20,7 @@ public class PastingApprovalStepEight {
     @JoinColumn(name = "id_aprobacion_tesis" , referencedColumnName= "id_aprobacion_tesis")
     private ThesisApprovalStepSeven thesisApprovalStepSeven;
 
-    @Column(name = "cumple_requisitos")
+    @Column(name = "cumple_requerimientos")
     private boolean meetRequirements = false;
 
     @Column(name = "eliminado")

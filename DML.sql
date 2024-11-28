@@ -149,4 +149,4 @@ VALUES
 (47, 'Av. Los Ciruelos 468', '1996-03-15', '78901238', 'Irene', 'irene.santana@fakemail.com', 'Santana', 'Fuentes', '987654367', 5),
 (48, 'Calle Los Perales 963', '1994-05-20', '89012349', 'Esteban', 'esteban.fuentes@fakemail.com', 'Fuentes', 'Salazar', '987654368', 6),
 (49, 'Jr. Los Manzanos 654', '1998-12-22', '90123450', 'Silvia', 'silvia.salazar@fakemail.com', 'Salazar', 'Ortiz', '987654369', 7),
-(50, 'Av. Los Duraznos 123', '1996-10-24', '01234571', 'Mario', 'mario.ortiz@fakemail.com', 'Ortiz', 'Mora', '987654370', 1);spring_sistema_academico
+(50, 'Av. Los Duraznos 123', '1996-10-24', '01234571', 'Mario', 'mario.ortiz@fakemail.com', 'Ortiz', 'Mora', '987654370', 1);spring_sistema_academicospring_sistema_academicop1_reservacion_titulo

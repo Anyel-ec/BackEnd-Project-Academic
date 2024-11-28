@@ -34,6 +34,9 @@ public class Student {
     @Column(name = "nombres", nullable = false, length = 150)
     private String firstNames;
 
+    public String getFullName() {
+        return String.format("%s %s", firstNames, lastName).trim();
+    }
     @NotBlank(message = "Apellido Paterno es requerido")
     @Size(max = 50,min = 1, message = "Apellido Paterno debe tener menos de 50 caracteres")
     @Pattern(regexp = "^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$", message = "El apellido paterno solo puede contener letras latinoamericanas y espacios.")

@@ -29,6 +29,7 @@ public class TitleReservationStepOneController {
     public List<TitleReservationStepOne> getAllTitleReservations() {
         return titleReservationStepOneService.getAllTitleReservations();
     }
+
     @GetMapping("/student/{studentCode}")
     public ResponseEntity<TitleReservationStepOne> getReservationByStudentCode(@PathVariable String studentCode) {
         try {
