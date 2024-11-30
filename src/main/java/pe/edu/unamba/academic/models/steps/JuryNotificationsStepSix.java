@@ -3,6 +3,8 @@ package pe.edu.unamba.academic.models.steps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import pe.edu.unamba.academic.models.HasUpdatedAt;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -10,7 +12,7 @@ import java.time.LocalDate;
 @Entity
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Table(name="p6_notificacion_jurados")
-public class JuryNotificationsStepSix {
+public class JuryNotificationsStepSix implements HasUpdatedAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_notificacion_jurados")
@@ -37,4 +39,8 @@ public class JuryNotificationsStepSix {
 
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
+    @Override
+    public java.util.Date getUpdatedAt() {
+        return updatedAt;
+    }
 }

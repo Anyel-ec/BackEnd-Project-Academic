@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import pe.edu.unamba.academic.models.HasUpdatedAt;
 import pe.edu.unamba.academic.models.actors.LineResearch;
 import pe.edu.unamba.academic.models.actors.Student;
 
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 @Data
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
-public class TitleReservationStepOne {
+public class TitleReservationStepOne implements HasUpdatedAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reservacion_titulo")
@@ -62,4 +63,10 @@ public class TitleReservationStepOne {
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updatedAt;
+
+    @Override
+    public java.util.Date getUpdatedAt() {
+        return updatedAt;
+    }
+
 }

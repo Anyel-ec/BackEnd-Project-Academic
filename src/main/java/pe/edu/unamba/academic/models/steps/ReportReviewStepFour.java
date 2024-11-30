@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import pe.edu.unamba.academic.models.HasUpdatedAt;
 
 import java.sql.Timestamp;
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 @Data
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
-public class ReportReviewStepFour {
+public class ReportReviewStepFour implements HasUpdatedAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_revision_reporte")
@@ -36,5 +37,8 @@ public class ReportReviewStepFour {
 
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
-
+    @Override
+    public java.util.Date getUpdatedAt() {
+        return updatedAt;
+    }
 }

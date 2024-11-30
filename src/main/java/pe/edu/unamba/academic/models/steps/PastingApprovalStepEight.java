@@ -3,6 +3,7 @@ package pe.edu.unamba.academic.models.steps;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import pe.edu.unamba.academic.models.HasUpdatedAt;
 
 import java.sql.Timestamp;
 
@@ -10,7 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Table(name = "p8_aprobacion_empastados")
-public class PastingApprovalStepEight {
+public class PastingApprovalStepEight implements HasUpdatedAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -34,4 +35,8 @@ public class PastingApprovalStepEight {
 
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
+    @Override
+    public java.util.Date getUpdatedAt() {
+        return updatedAt;
+    }
 }

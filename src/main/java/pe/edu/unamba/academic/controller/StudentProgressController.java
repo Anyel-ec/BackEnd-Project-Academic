@@ -7,6 +7,7 @@ import pe.edu.unamba.academic.models.StudentProgress;
 import pe.edu.unamba.academic.services.StudentProgressService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,20 +17,21 @@ public class StudentProgressController {
     private final StudentProgressService studentProgressService;
 
     @GetMapping("/{studentCode}")
-    public ResponseEntity<List<StudentProgress>> getStudentProgress(@PathVariable String studentCode) {
+    public ResponseEntity<List<StudentProgress>> getProgressByStudent(@PathVariable String studentCode) {
         List<StudentProgress> progress = studentProgressService.getProgressByStudent(studentCode);
-        if (progress.isEmpty()) {
-            return ResponseEntity.noContent().build();  // Or ResponseEntity.notFound().build() depending on business logic
-        }
         return ResponseEntity.ok(progress);
     }
+
     @GetMapping("/todos")
-    public ResponseEntity<List<StudentProgress>> getAllStudentsProgress() {
-        List<StudentProgress> allProgress = studentProgressService.getProgressForAllStudents();
-        if (allProgress.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(allProgress);
+    public ResponseEntity<List<Map<String, Object>>> getAllProgressGroupedByStudent() {
+        List<Map<String, Object>> progress = studentProgressService.getAllProgressGroupedByStudent();
+        return ResponseEntity.ok(progress);
+    }
+
+    @GetMapping("/todos/simplificado")
+    public ResponseEntity<List<Map<String, Object>>> getSimplifiedProgressGroupedByStudent() {
+        List<Map<String, Object>> simplifiedProgress = studentProgressService.getSimplifiedProgressByStudent();
+        return ResponseEntity.ok(simplifiedProgress);
     }
 
 }
