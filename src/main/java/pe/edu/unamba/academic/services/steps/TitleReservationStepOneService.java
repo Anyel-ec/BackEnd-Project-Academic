@@ -9,9 +9,9 @@
     import org.springframework.mail.MailException;
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
-    import pe.edu.unamba.academic.models.User;
+    import pe.edu.unamba.academic.dto.response.JsonResponseDto;
+    import pe.edu.unamba.academic.models.UserInfo;
     import pe.edu.unamba.academic.models.actors.Student;
-    import pe.edu.unamba.academic.models.messages.response.JsonResponse;
     import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
     import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
     import pe.edu.unamba.academic.repositories.actors.StudentRepository;
@@ -76,55 +76,57 @@
             LOG.info("Buscando reservación de título con ID: {}", id);
             return titleReservationStepOneRepository.findById(id);
         }
-    
+
         @Transactional
         public TitleReservationStepOne saveTitleReservation(TitleReservationStepOne titleReservation) {
             try {
-                // Verificar la unicidad del título solo si no es nulo
+                // Retorno temprano si el título ya existe
                 if (titleReservation.getTitle() != null && titleReservationStepOneRepository.existsByTitle(titleReservation.getTitle())) {
                     throw new IllegalArgumentException("Ya existe una reservación con este título.");
                 }
-    
-                // Validar y asignar el estudiante a la reservación
-                if (titleReservation.getStudent() != null && titleReservation.getStudent().getId() != null) {
-                    Long studentId = titleReservation.getStudent().getId();
-    
-                    Optional<Student> studentOpt = studentRepository.findById(studentId);
-                    if (studentOpt.isPresent()) {
-                        Student student = studentOpt.get();
-                        titleReservation.setStudent(student);
-    
-                        handleStudentUser(student);
-    
-                        if (titleReservation.getStudentTwo() != null && titleReservation.getStudentTwo().getId() != null) {
-                            Long studentTwoId = titleReservation.getStudentTwo().getId();
-                            Optional<Student> studentTwoOpt = studentRepository.findById(studentTwoId);
-                            if (studentTwoOpt.isPresent()) {
-                                Student studentTwo = studentTwoOpt.get();
-                                titleReservation.setStudentTwo(studentTwo);
-                                handleStudentUser(studentTwo);
-                            } else {
-                                LOG.error("Segundo estudiante no encontrado con ID: {}", studentTwoId);
-                            }
-                        }
-    
-                        if (titleReservation.getLineOfResearch() != null && titleReservation.getLineOfResearch().getId() != null) {
-                            LOG.info("Asignando línea de investigación con ID: {}", titleReservation.getLineOfResearch().getId());
-                        } else {
-                            LOG.warn("No se encontró una línea de investigación válida, no se asignará.");
-                            titleReservation.setLineOfResearch(null);
-                        }
-    
-                        return titleReservationStepOneRepository.save(titleReservation);
-                    } else {
-                        LOG.error("Estudiante no encontrado con ID: {}", studentId);
-                        return null;
-                    }
-                } else {
+
+                // Retorno temprano si los datos del estudiante son inválidos
+                if (titleReservation.getStudent() == null || titleReservation.getStudent().getId() == null) {
                     LOG.error("Datos de estudiante no válidos en la reservación.");
                     return null;
                 }
-            }    catch (IllegalArgumentException e) {
+
+                // Validar y asignar el estudiante principal
+                Long studentId = titleReservation.getStudent().getId();
+                Optional<Student> studentOpt = studentRepository.findById(studentId);
+                if (studentOpt.isEmpty()) {
+                    LOG.error("Estudiante no encontrado con ID: {}", studentId);
+                    return null;
+                }
+
+                Student student = studentOpt.get();
+                titleReservation.setStudent(student);
+                handleStudentUser(student);
+
+                // Validar y asignar el segundo estudiante si está presente
+                if (titleReservation.getStudentTwo() != null && titleReservation.getStudentTwo().getId() != null) {
+                    Long studentTwoId = titleReservation.getStudentTwo().getId();
+                    Optional<Student> studentTwoOpt = studentRepository.findById(studentTwoId);
+                    if (studentTwoOpt.isPresent()) {
+                        Student studentTwo = studentTwoOpt.get();
+                        titleReservation.setStudentTwo(studentTwo);
+                        handleStudentUser(studentTwo);
+                    } else {
+                        LOG.error("Segundo estudiante no encontrado con ID: {}", studentTwoId);
+                    }
+                }
+
+                // Validar y asignar la línea de investigación
+                if (titleReservation.getLineOfResearch() != null && titleReservation.getLineOfResearch().getId() != null) {
+                    LOG.info("Asignando línea de investigación con ID: {}", titleReservation.getLineOfResearch().getId());
+                } else {
+                    LOG.warn("No se encontró una línea de investigación válida, no se asignará.");
+                    titleReservation.setLineOfResearch(null);
+                }
+
+                return titleReservationStepOneRepository.save(titleReservation);
+
+            } catch (IllegalArgumentException e) {
                 LOG.error("Error de validación: {}", e.getMessage());
                 throw e;
             } catch (Exception e) {
@@ -132,7 +134,8 @@
                 return null;
             }
         }
-    
+
+
         // Manejo del usuario para un estudiante
         @Transactional
         protected void handleStudentUser(Student student) {
@@ -140,9 +143,9 @@
             try {
                 String studentCode = student.getStudentCode();
                 if (studentCode != null && !studentCode.isEmpty()) {
-                    JsonResponse existingUser = userService.getUserByUsername(studentCode);
+                    JsonResponseDto existingUser = userService.getUserByUsername(studentCode);
     
-                    if (!existingUser.isPresent()) {
+                    if (!existingUser.success()) {
                         LOG.info("No existe un usuario para el estudiante con código {}, procediendo a crear uno.", studentCode);
                         createUserForStudent(student);
                     } else {
@@ -164,7 +167,7 @@
                 String studentCode = student.getStudentCode();
                 String randomPassword = generateRandomPassword(8);
     
-                User newUser = new User();
+                UserInfo newUser = new UserInfo();
                 newUser.setUsername(studentCode);
                 newUser.setPassword(passwordEncoder.encode(randomPassword));
                 newUser.setFirstName(student.getFirstNames());
@@ -177,7 +180,7 @@
                 LOG.info("Intentando enviar email a {}, con código de usuario {}", student.getEmail(), studentCode);
                 emailService.sendPassword(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
     
-                userService.saveUser(newUser);
+                userService.createUser(newUser);
                 LOG.info("Usuario creado y email enviado para el estudiante con código: {}", studentCode);
             } catch (DataAccessException e) {
                 LOG.error("Error de acceso a base de datos al crear usuario para el estudiante: {}", e.getMessage());

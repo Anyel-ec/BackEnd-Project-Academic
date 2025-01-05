@@ -1,13 +1,12 @@
 package pe.edu.unamba.academic.models;
 import jakarta.persistence.*;
 import lombok.Data;
-import pe.edu.unamba.academic.models.ResearchUnit;
 import pe.edu.unamba.academic.models.actors.Rol;
 
 @Entity
 @Table(name = "usuarios")
 @Data
-public class User {
+public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")

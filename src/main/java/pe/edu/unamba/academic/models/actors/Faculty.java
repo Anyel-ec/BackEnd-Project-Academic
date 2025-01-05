@@ -2,6 +2,7 @@ package pe.edu.unamba.academic.models.actors;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "facultades")
@@ -12,5 +13,5 @@ public class Faculty {
     private Long id;
 
     @Column(name = "nombre_facultad", nullable = false, length = 50)
-    private String nombreFacultad;
+    private String nameFaculty;
 }

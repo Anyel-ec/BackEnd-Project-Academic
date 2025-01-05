@@ -31,7 +31,7 @@ public class FacultyService {
 
     public Faculty updateFacultad(Long id, Faculty facultadDetails) {
         Faculty facultad = facultyRepository.findById(id).get();
-        facultad.setNombreFacultad(facultadDetails.getNombreFacultad());
+        facultad.setNameFaculty(facultadDetails.getNameFaculty());
         return facultyRepository.save(facultad);
     }
 }

@@ -4,11 +4,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pe.edu.unamba.academic.models.User;
-import pe.edu.unamba.academic.models.messages.response.JsonResponse;
+import pe.edu.unamba.academic.dto.response.JsonResponseDto;
+import pe.edu.unamba.academic.models.UserInfo;
 import pe.edu.unamba.academic.repositories.UserRepository;
 
 import java.util.List;
@@ -16,71 +15,78 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllUsers() {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public List<UserInfo> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public JsonResponseDto getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(user -> new JsonResponseDto(true, HttpStatus.OK.value(), "Usuario encontrado", user))
+                .orElseGet(() -> new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "Usuario no encontrado", null));
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    public User updateUser(Long id, User userDetails) {
-        User user = userRepository.findById(id).get();
-        user.setFirstName(userDetails.getFirstName());
-        user.setLastName(userDetails.getLastName());
-        user.setEmail(userDetails.getEmail());
-        user.setPassword(userDetails.getPassword());
-        user.setRol(userDetails.getRol());
-        user.setResearchUnit(userDetails.getResearchUnit());
-        return userRepository.save(user);
-    }
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
-
-
-    public JsonResponse validateUserJWT(String token) {
-        Optional<User> user;
+    public JsonResponseDto createUser(UserInfo user) {
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            LOG.info("Username {}",  username);
-            user = userRepository.findByUsernameAndStateTrue(username);
-            if (!user.isPresent()) {
-                return new JsonResponse(false, HttpStatus.UNAUTHORIZED.value(),"inhautorized");
-            }
-
-        } catch (Exception e) {
-            return new JsonResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-
-        }
-        return new JsonResponse(true, "Autorizado", user.get());
-    }
-
-    public JsonResponse createUser(User user) {
-        try {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return new JsonResponse(true, "Usuario creado");
+            return new JsonResponseDto(true, HttpStatus.CREATED.value(), "Usuario creado exitosamente", null);
         } catch (Exception e) {
-            return new JsonResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            LOG.error("Error al crear usuario: {}", e.getMessage(), e);
+            return new JsonResponseDto(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error al crear el usuario", e.getMessage());
         }
     }
 
-    public JsonResponse getUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsernameAndStateTrue(username);
-        if (!user.isPresent()) {
-            return new JsonResponse(false, "El usuario no registrado");
+    public JsonResponseDto updateUser(Long id, UserInfo userDetails) {
+        return userRepository.findById(id).map(user -> {
+            user.setFirstName(userDetails.getFirstName());
+            user.setLastName(userDetails.getLastName());
+            user.setEmail(userDetails.getEmail());
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            user.setRol(userDetails.getRol());
+            user.setResearchUnit(userDetails.getResearchUnit());
+            userRepository.save(user);
+            return new JsonResponseDto(true, HttpStatus.OK.value(), "Usuario actualizado correctamente", user);
+        }).orElseGet(() -> new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "Usuario no encontrado", null));
+    }
+
+    public JsonResponseDto deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            return new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "Usuario no encontrado", null);
         }
-        return new JsonResponse(true, user.get());
+        try {
+            userRepository.deleteById(id);
+            return new JsonResponseDto(true, HttpStatus.OK.value(), "Usuario eliminado correctamente", null);
+        } catch (Exception e) {
+            LOG.error("Error al eliminar usuario: {}", e.getMessage(), e);
+            return new JsonResponseDto(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error al eliminar el usuario", e.getMessage());
+        }
+    }
+
+    public JsonResponseDto validateUserJWT(String token) {
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOG.info("Validando usuario con token: {}", username);
+            return userRepository.findByUsernameAndStateTrue(username)
+                    .map(user -> new JsonResponseDto(true, HttpStatus.OK.value(), "Usuario autorizado", user))
+                    .orElseGet(() -> new JsonResponseDto(false, HttpStatus.UNAUTHORIZED.value(), "No autorizado", null));
+        } catch (Exception e) {
+            LOG.error("Error al validar usuario con JWT: {}", e.getMessage(), e);
+            return new JsonResponseDto(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error interno del servidor", null);
+        }
+    }
+
+    public JsonResponseDto getUserByUsername(String username) {
+        return userRepository.findByUsernameAndStateTrue(username)
+                .map(user -> new JsonResponseDto(true, HttpStatus.OK.value(), "Usuario encontrado", user))
+                .orElseGet(() -> new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "Usuario no registrado", null));
     }
 }

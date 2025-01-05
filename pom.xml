@@ -10,8 +10,8 @@
     </parent>
     <groupId>pe.edu.unamba</groupId>
     <artifactId>academic</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Project-Peru-Academic</name>
+    <version>1.0_PRERELEASE</version>
+    <name>Proyecto</name>
     <description>Project-Peru-Academic</description>
     <url/>
     <licenses>

@@ -1,34 +1,37 @@
 package pe.edu.unamba.academic.security.jwt;
 
-import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.ServletException;
-import pe.edu.unamba.academic.models.messages.response.JsonResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+import pe.edu.unamba.academic.dto.response.JsonResponseDto;
 
+import java.io.IOException;
+
+/*
+ * Author: Anyel EC
+ * Github: https://github.com/Anyel-ec
+ * Creation date: 25/12/2024
+ */
 @Component
+@Slf4j
 public class JwtEntryPoint implements AuthenticationEntryPoint {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JwtEntryPoint.class);
-
-    private String noAutorizado = "inhautorized";
-
+    // This method intercepts unauthenticated requests and returns a response with an error message in JSON format.
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse res,
-                         org.springframework.security.core.AuthenticationException e) throws IOException, ServletException {
-
-        LOG.error("FILTRO ENTY POINT -> ", e.getMessage());
-        JsonResponse resp = new JsonResponse(Boolean.FALSE, HttpStatus.UNAUTHORIZED.value(), noAutorizado);
+    public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e)
+            throws IOException {
+        log.error("Error no autorizado {}", e.getMessage());
+        JsonResponseDto resp = new JsonResponseDto(Boolean.FALSE, HttpStatus.UNAUTHORIZED.value(), "Unauthorized", null);
         res.setContentType("application/json");
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
         res.getWriter().write(new ObjectMapper().writeValueAsString(resp));
         res.getWriter().flush();
         res.getWriter().close();
     }
+
 }
