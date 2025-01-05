@@ -11,7 +11,7 @@ import pe.edu.unamba.academic.models.UserInfo;
 import pe.edu.unamba.academic.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class UserService {
