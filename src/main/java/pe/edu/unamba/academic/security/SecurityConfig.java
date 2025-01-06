@@ -18,11 +18,6 @@ import pe.edu.unamba.academic.security.config.UserDetailsServiceImpl;
 import pe.edu.unamba.academic.security.jwt.JwtEntryPoint;
 import pe.edu.unamba.academic.security.jwt.JwtTokenFilter;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @AllArgsConstructor
 @Slf4j
 @Configuration
@@ -48,7 +43,8 @@ public class SecurityConfig {
             "api/v1/auth/login",
             "/api/v1/test/validateToken",
             "/api/v1/**",
-            "/test/"
+            "/test/",
+            "/api/correo/**"
     };
 
     @Bean

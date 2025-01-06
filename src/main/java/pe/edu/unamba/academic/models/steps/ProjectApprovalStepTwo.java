@@ -39,9 +39,11 @@ public class ProjectApprovalStepTwo implements HasUpdatedAt {
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;
 
+    @Column(name = "numero_registro")
+    private Integer registrationNumber;
+
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
-
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Timestamp updatedAt;
     @Override

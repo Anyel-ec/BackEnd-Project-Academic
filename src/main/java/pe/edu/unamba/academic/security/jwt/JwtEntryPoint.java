@@ -12,11 +12,6 @@ import pe.edu.unamba.academic.dto.response.JsonResponseDto;
 
 import java.io.IOException;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @Component
 @Slf4j
 public class JwtEntryPoint implements AuthenticationEntryPoint {

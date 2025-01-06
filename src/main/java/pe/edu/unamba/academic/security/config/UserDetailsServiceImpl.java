@@ -8,13 +8,6 @@ import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.UserInfo;
 import pe.edu.unamba.academic.repositories.UserRepository;
 
-import java.util.Optional;
-
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @AllArgsConstructor
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

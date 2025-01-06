@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.HasUpdatedAt;
 import pe.edu.unamba.academic.models.actors.Teacher;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "p3_designacion_jurado")
@@ -35,7 +36,7 @@ public class JuryAppointmentStepThree implements HasUpdatedAt {
     private Teacher secondMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accesitario_id" , referencedColumnName = "id_docente")
+    @JoinColumn(name = "accesitario_id", referencedColumnName = "id_docente")
     private Teacher accessory;
 
     @Column(name = "eliminado")
@@ -46,6 +47,30 @@ public class JuryAppointmentStepThree implements HasUpdatedAt {
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT", nullable = true)
     private String observations;
+
+    @Column(name="hora", columnDefinition = "VARCHAR(5)")
+    private String hour;
+
+    @Column(name = "fecha_FUT")
+    private Date futDate;
+
+    @Column(name="numero_folio")
+    private String numberFolio;
+
+    @Column(name = "numero_registro")
+    private Integer registrationNumber;
+
+    @Column(name="numero_resolucion_decanal")
+    private String numberDeanResolution;
+
+    @Column(name="segundo_numero_resolucion_decanal")
+    private String secondNumberDeanResolution;
+
+    @Column(name ="resolucion_decanal")
+    private String deanResolution;
+
+    @Column(name="segundo_resolucion_decanal")
+    private String secondDeanResolution;
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;

@@ -21,9 +21,4 @@ public class AppEnvironment {
     }
 
 
-
-    public static void main(String[] args) {
-        AppEnvironment appEnvironment = new AppEnvironment();
-        System.out.println(appEnvironment.getBaseUrl());
-    }
 }

@@ -11,6 +11,4 @@ public class EmailController {
 
     @Autowired
     private EmailService emailService;
-
-
 }

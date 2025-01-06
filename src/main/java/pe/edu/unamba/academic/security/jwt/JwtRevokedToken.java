@@ -1,10 +1,5 @@
 package pe.edu.unamba.academic.security.jwt;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 02/01/2025
- */
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

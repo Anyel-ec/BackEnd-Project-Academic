@@ -17,11 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @Component
 @Slf4j
 public class JwtProvider {

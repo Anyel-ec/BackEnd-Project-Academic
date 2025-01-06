@@ -14,4 +14,7 @@ public class Faculty {
 
     @Column(name = "nombre_facultad", nullable = false, length = 50)
     private String nameFaculty;
+
+    @Column(name = "decano_facultad")
+    private String deanFacultyName;
 }

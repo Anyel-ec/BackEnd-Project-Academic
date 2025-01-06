@@ -9,11 +9,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @Configuration
 public class BeansConfig {
     // Defines a bean for encoding passwords securely.

@@ -16,11 +16,6 @@ import pe.edu.unamba.academic.security.config.UserDetailsServiceImpl;
 
 import java.io.IOException;
 
-/*
- * Author: Anyel EC
- * Github: https://github.com/Anyel-ec
- * Creation date: 25/12/2024
- */
 @Slf4j
 @AllArgsConstructor
 @Component
