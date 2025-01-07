@@ -35,9 +35,13 @@ public class ConstancyThesisStepFive implements HasUpdatedAt {
 
     @Column(name = "eliminado", columnDefinition = "boolean default false")
     private boolean isDisable;
+
     @Column(name = "numero_registro")
-    private Integer registrationNumber;    @Column(name = "numero_solicitud")
+    private Integer registrationNumber;
+
+    @Column(name = "numero_solicitud")
     private Integer aplicationNumber;
+
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
@@ -45,6 +49,7 @@ public class ConstancyThesisStepFive implements HasUpdatedAt {
     @Column(name = "actualizado_en", nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updatedAt;
+
     @Override
     public java.util.Date getUpdatedAt() {
         return updatedAt;

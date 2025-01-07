@@ -6,6 +6,7 @@ import lombok.Data;
 import pe.edu.unamba.academic.models.HasUpdatedAt;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @Entity
@@ -29,6 +30,15 @@ public class PastingApprovalStepEight implements HasUpdatedAt {
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT")
     private String observations;
+
+    @Column(name = "resolucion_decanal")
+    private Integer deanResolution;
+
+    @Column(name = "numero_registro")
+    private Integer registrationNumber;
+
+    @Column(name = "numero_articulo")
+    private Integer articleNumber;
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
