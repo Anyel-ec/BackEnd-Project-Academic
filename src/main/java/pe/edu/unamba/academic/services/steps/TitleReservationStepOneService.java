@@ -12,9 +12,13 @@
     import pe.edu.unamba.academic.dto.response.JsonResponseDto;
     import pe.edu.unamba.academic.models.UserInfo;
     import pe.edu.unamba.academic.models.actors.Student;
+    import pe.edu.unamba.academic.models.steps.ChangeAdvisor;
+    import pe.edu.unamba.academic.models.steps.PassageExpansion;
     import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
     import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
     import pe.edu.unamba.academic.repositories.actors.StudentRepository;
+    import pe.edu.unamba.academic.repositories.steps.ChangeAdvisorRepository;
+    import pe.edu.unamba.academic.repositories.steps.PassageExpansionRepository;
     import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
     import pe.edu.unamba.academic.repositories.steps.TitleReservationStepOneRepository;
     import pe.edu.unamba.academic.services.EmailService;
@@ -33,11 +37,14 @@
     
         private final TitleReservationStepOneRepository titleReservationStepOneRepository;
         private final ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
+        private final ChangeAdvisorRepository changeAdvisorRepository;
+        private final PassageExpansionRepository passageExpansionRepository;
         private final RolService rolService;
         private final StudentRepository studentRepository;
         private final UserService userService;
         private final EmailService emailService;
         private final PasswordEncoder passwordEncoder;
+
     
         private static final Logger LOG = LoggerFactory.getLogger(TitleReservationStepOneService.class);
 
@@ -238,6 +245,20 @@
                     projectApproval.setObservations(null);
     
                     projectApprovalStepTwoRepository.save(projectApproval);
+
+                    PassageExpansion passageExpansion = new PassageExpansion();
+                    passageExpansion.setTitleReservationStepOne(updatedReservation);
+                    passageExpansion.setObservations(null);
+                    passageExpansion.setMeetsRequirements(false);
+                    passageExpansion.setDisable(false);
+                    passageExpansionRepository.save(passageExpansion);
+
+                    ChangeAdvisor changeAdvisor = new ChangeAdvisor();
+                    changeAdvisor.setTitleReservationStepOne(updatedReservation);
+                    changeAdvisor.setObservations(null);
+                    changeAdvisor.setMeetsRequirements(false);
+                    changeAdvisor.setDisable(false);
+                    changeAdvisorRepository.save(changeAdvisor);
                 }
     
                 return updatedReservation;

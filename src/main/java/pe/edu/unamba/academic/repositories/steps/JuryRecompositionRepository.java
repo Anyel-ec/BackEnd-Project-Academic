@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface JuryRecompositionRepository extends JpaRepository<JuryRecomposition, Long> {
     Optional<JuryRecomposition> findByProjectApprovalStepTwoId(Long projectApprovalStepTwoId);
-
 }

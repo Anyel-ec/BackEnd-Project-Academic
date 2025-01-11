@@ -1,6 +1,5 @@
 package pe.edu.unamba.academic.models.steps;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,19 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "pe3_recomposicion_jurados")
+@Table(name = "pe2_ampliacion_pasos")
 @Data
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 @Slf4j
-public class JuryRecomposition {
+public class PassageExpansion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cambio_asesor")
+    @Column(name = "id_ampliacion_pasos")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "aprobacion_proyecto", referencedColumnName = "id_aprobacion_proyecto")
-    private ProjectApprovalStepTwo projectApprovalStepTwo;
+    @JoinColumn(name = "reservacion_titulo", referencedColumnName = "id_reservacion_titulo")
+    private TitleReservationStepOne titleReservationStepOne;
 
     @Column(name = "observaciones", columnDefinition = "LONGTEXT")
     private String observations;

@@ -27,8 +27,8 @@ public class JuryRecompositionService {
     public JuryRecomposition updateJuryRecomposition(Long id, JuryRecomposition updatedJuryRecomposition) {
         return juryRecompositionRepository.findById(id)
                 .map(juryRecomposition -> {
-                    juryRecomposition.setObservations(updatedJuryRecomposition.getObservations()); // Ejemplo: Actualiza nombre
-                    juryRecomposition.setMeetsRequirements(updatedJuryRecomposition.getMeetsRequirements()); // Otro campo
+                    juryRecomposition.setObservations(updatedJuryRecomposition.getObservations());
+                    juryRecomposition.setMeetsRequirements(updatedJuryRecomposition.getMeetsRequirements());
                     return juryRecompositionRepository.save(juryRecomposition);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Jury Recomposition with ID " + id + " not found"));
