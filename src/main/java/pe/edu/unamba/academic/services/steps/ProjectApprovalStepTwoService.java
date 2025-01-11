@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
 import pe.edu.unamba.academic.models.steps.JuryAppointmentStepThree;
+import pe.edu.unamba.academic.models.steps.JuryRecomposition;
 import pe.edu.unamba.academic.repositories.steps.JuryAppointmentStepThreeRepository;
 import pe.edu.unamba.academic.repositories.steps.ProjectApprovalStepTwoRepository;
+import pe.edu.unamba.academic.repositories.steps.JuryRecompositionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class ProjectApprovalStepTwoService {
     private final JuryAppointmentStepThreeRepository juryAppointmentStepThreeRepository;
     private final ProjectApprovalStepTwoRepository projectApprovalStepTwoRepository;
+    private final JuryRecompositionRepository juryRecompositionRepository;
 
     // Obtener todas las aprobaciones de proyectos
     public List<ProjectApprovalStepTwo> getAllProjectApprovals() {
@@ -31,6 +34,7 @@ public class ProjectApprovalStepTwoService {
     public Optional<ProjectApprovalStepTwo> getApprovalByStudentCode(String studentCode) {
         return projectApprovalStepTwoRepository.findByAnyStudentCodeNative(studentCode);
     }
+
     // Crear una nueva aprobación de proyecto
     public ProjectApprovalStepTwo createProjectApproval(ProjectApprovalStepTwo projectApprovalStepTwo) {
         return projectApprovalStepTwoRepository.save(projectApprovalStepTwo);
@@ -49,9 +53,9 @@ public class ProjectApprovalStepTwoService {
             // Guardar la aprobación de proyecto actualizada
             ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoRepository.save(approval);
 
-            // Crear el paso de asignación de jurados si el proyecto está aprobado
             // Crear el paso de asignación de jurados si el proyecto cumple con los requisitos
             if (savedApproval.getMeetRequirements()) {
+                // Crear y guardar la asignación de jurados
                 JuryAppointmentStepThree juryAppointment = new JuryAppointmentStepThree();
                 juryAppointment.setProjectApprovalStepTwo(savedApproval);
                 juryAppointment.setPresident(null);
@@ -60,14 +64,20 @@ public class ProjectApprovalStepTwoService {
                 juryAppointment.setMeetRequirements(false);
                 juryAppointment.setAccessory(null);
                 juryAppointment.setObservations(null);
-
-                // Guardar la asignación de jurados
                 juryAppointmentStepThreeRepository.save(juryAppointment);
+
+                // Crear y guardar la recomposición de jurados
+                JuryRecomposition juryRecomposition = new JuryRecomposition();
+                juryRecomposition.setProjectApprovalStepTwo(savedApproval);
+                juryRecomposition.setObservations(null);
+                juryRecomposition.setDisable(false);
+                juryRecomposition.setMeetsRequirements(false);
+
+                juryRecompositionRepository.save(juryRecomposition);
             }
             return Optional.of(savedApproval);
         });
     }
-
 
     // Eliminar una aprobación de proyecto por ID
     public boolean deleteProjectApproval(Long id) {
