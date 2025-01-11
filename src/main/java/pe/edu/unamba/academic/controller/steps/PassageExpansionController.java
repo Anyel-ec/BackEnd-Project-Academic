@@ -9,7 +9,7 @@ import pe.edu.unamba.academic.services.steps.PassageExpansionService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/passage-expansions")
+@RequestMapping("/api/v1/expansion_tesis")
 @RequiredArgsConstructor
 public class PassageExpansionController {
 

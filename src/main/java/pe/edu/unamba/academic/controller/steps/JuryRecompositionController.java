@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/jury_recompositions")
+@RequestMapping("/api/v1/recomposicion_jurado")
 public class JuryRecompositionController {
 
     private final JuryRecompositionService juryRecompositionService;

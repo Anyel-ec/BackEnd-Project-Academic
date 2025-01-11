@@ -9,7 +9,7 @@ import pe.edu.unamba.academic.services.steps.ChangeAdvisorService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/change_advisors")
+@RequestMapping("/api/v1/cambio_asesor")
 @RequiredArgsConstructor
 public class ChangeAdvisorController {
 
