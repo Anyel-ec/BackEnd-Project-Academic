@@ -16,6 +16,7 @@
     import pe.edu.unamba.academic.models.steps.PassageExpansion;
     import pe.edu.unamba.academic.models.steps.ProjectApprovalStepTwo;
     import pe.edu.unamba.academic.models.steps.TitleReservationStepOne;
+    import pe.edu.unamba.academic.repositories.UserRepository;
     import pe.edu.unamba.academic.repositories.actors.StudentRepository;
     import pe.edu.unamba.academic.repositories.steps.ChangeAdvisorRepository;
     import pe.edu.unamba.academic.repositories.steps.PassageExpansionRepository;
@@ -41,6 +42,7 @@
         private final PassageExpansionRepository passageExpansionRepository;
         private final RolService rolService;
         private final StudentRepository studentRepository;
+        private final UserRepository userRepository;
         private final UserService userService;
         private final EmailService emailService;
         private final PasswordEncoder passwordEncoder;
@@ -186,8 +188,8 @@
     
                 LOG.info("Intentando enviar email a {}, con código de usuario {}", student.getEmail(), studentCode);
                 emailService.sendPassword(student.getEmail(), "REGISTRO", student.getFirstNames(), studentCode, randomPassword);
-    
-                userService.createUser(newUser);
+
+                userRepository.save(newUser);
                 LOG.info("Usuario creado y email enviado para el estudiante con código: {}", studentCode);
             } catch (DataAccessException e) {
                 LOG.error("Error de acceso a base de datos al crear usuario para el estudiante: {}", e.getMessage());

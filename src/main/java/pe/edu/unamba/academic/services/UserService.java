@@ -36,7 +36,6 @@ public class UserService {
 
     public JsonResponseDto createUser(UserInfo user) {
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return new JsonResponseDto(true, HttpStatus.CREATED.value(), "Usuario creado exitosamente", null);
         } catch (Exception e) {
