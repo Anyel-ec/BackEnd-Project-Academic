@@ -228,7 +228,7 @@
                 existingReservation.setObservations(titleReservationDetails.getObservations());
                 existingReservation.setTitle(titleReservationDetails.getTitle());
                 existingReservation.setLineOfResearch(titleReservationDetails.getLineOfResearch());
-                LOG.info("Valor de projectSimilarity recibido: {}", titleReservationDetails.getProjectSimilarity());
+                existingReservation.setRegistrationNumber(titleReservationDetails.getRegistrationNumber());
                 existingReservation.setProjectSimilarity(
                         titleReservationDetails.getProjectSimilarity() != null
                                 ? new BigDecimal(titleReservationDetails.getProjectSimilarity().toString())

@@ -26,6 +26,9 @@ public class TitleReservationStepOne implements HasUpdatedAt {
     @Column(name = "cumple_requerimientos", columnDefinition = "boolean default false")
     private boolean meetsRequirements = false;
 
+    @Column(name = "numero_registro")
+    private Integer registrationNumber;
+
     @OneToOne(fetch = FetchType.EAGER, orphanRemoval = false)
     @JoinColumn(name = "id_student")
     private Student student;
