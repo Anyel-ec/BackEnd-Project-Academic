@@ -20,14 +20,11 @@ public class ThesisApprovalStepSeven implements HasUpdatedAt {
     @Column(name = "numero_registro")
     private Integer registrationNumber;
 
-    @Column(name = "decano_facultad")
-    private Integer deanFacultyName;
-
     @Column(name = "numero_informe")
     private Integer reportNumber;
 
     @Column(name = "numero_memorandum_multiple")
-    private Integer multipleMemorandumNumber ;
+    private String multipleMemorandumNumber ;
 
     @OneToOne
     @JoinColumn(name = "notificacion_jurados", referencedColumnName = "id_notificacion_jurados")

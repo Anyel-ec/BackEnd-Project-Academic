@@ -57,6 +57,9 @@ public class ThesisApprovalStepSevenService {
                 ));
 
         existingApproval.setMeetRequirements(thesisApprovalStepSeven.isMeetRequirements());
+        existingApproval.setRegistrationNumber(thesisApprovalStepSeven.getRegistrationNumber());
+        existingApproval.setReportNumber(thesisApprovalStepSeven.getReportNumber());
+        existingApproval.setMultipleMemorandumNumber(thesisApprovalStepSeven.getMultipleMemorandumNumber());
 
         if (thesisApprovalStepSeven.getJuryNotificationsStepSix() != null) {
             existingApproval.setJuryNotificationsStepSix(thesisApprovalStepSeven.getJuryNotificationsStepSix());

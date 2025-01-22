@@ -56,11 +56,9 @@ public class PastingApprovalStepEightService {
         if (pastingApprovalStepEight.getThesisApprovalStepSeven() != null) {
             existingApproval.setThesisApprovalStepSeven(pastingApprovalStepEight.getThesisApprovalStepSeven());
         }
-
-        // Si cumple con los requisitos, crea un nuevo registro en la siguiente etapa
-
-
-        // Guarda el objeto actualizado en la base de datos
+        existingApproval.setDeanResolution(pastingApprovalStepEight.getDeanResolution());
+        existingApproval.setRegistrationNumber(pastingApprovalStepEight.getRegistrationNumber());
+        existingApproval.setArticleNumber(pastingApprovalStepEight.getArticleNumber());
         repository.save(existingApproval);
     }
 

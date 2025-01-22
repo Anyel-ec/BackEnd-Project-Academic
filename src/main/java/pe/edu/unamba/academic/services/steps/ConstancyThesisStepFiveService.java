@@ -51,6 +51,8 @@ public class ConstancyThesisStepFiveService {
             if (updatedConstancyThesis.getObservations() != null) {
                 existingThesis.setObservations(updatedConstancyThesis.getObservations());
             }
+            existingThesis.setAplicationNumber(updatedConstancyThesis.getAplicationNumber());
+            existingThesis.setRegistrationNumber(updatedConstancyThesis.getRegistrationNumber());
             existingThesis.setMeetsRequirements(updatedConstancyThesis.isMeetsRequirements());
             existingThesis.setDisable(updatedConstancyThesis.isDisable());
             if (updatedConstancyThesis.isMeetsRequirements()) {
