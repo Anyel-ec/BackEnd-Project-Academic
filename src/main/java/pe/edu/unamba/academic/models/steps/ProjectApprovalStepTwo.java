@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.HasUpdatedAt;
 import pe.edu.unamba.academic.models.actors.Teacher;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "p2_aprobacion_proyecto")
@@ -41,6 +42,9 @@ public class ProjectApprovalStepTwo implements HasUpdatedAt {
 
     @Column(name = "numero_registro")
     private Integer registrationNumber;
+
+    @Column(name = "fecha_referencia")
+    private java.sql.Date referenceDate;
 
     @Column(name = "creado_en", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;

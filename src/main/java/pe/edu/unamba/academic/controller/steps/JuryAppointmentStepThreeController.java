@@ -78,14 +78,46 @@ public class JuryAppointmentStepThreeController {
             jury.setAccessory(accessory);
         }
 
-        // Actualizar otros campos directamente
         if (juryData.getObservations() != null) {
             jury.setObservations(juryData.getObservations());
         }
-        jury.setMeetRequirements(juryData.isMeetRequirements());
 
+        if (juryData.getHour() != null) {
+            jury.setHour(juryData.getHour());
+        }
+
+        if (juryData.getNumberFolio() != null) {
+            jury.setNumberFolio(juryData.getNumberFolio());
+        }
+
+        if (juryData.getFutDate() != null) {
+            jury.setFutDate(juryData.getFutDate());
+        }
+        // Actualizar otros campos directamente
+        if (juryData.getRegistrationNumber() != null) {
+            jury.setRegistrationNumber(juryData.getRegistrationNumber());
+        }
+
+        // Actualizar otros campos directamente
+        if (juryData.getNumberDeanResolution() != null) {
+            jury.setNumberDeanResolution(juryData.getNumberDeanResolution());
+        }
+
+        if (juryData.getSecondNumberDeanResolution() != null) {
+            jury.setSecondNumberDeanResolution(juryData.getSecondNumberDeanResolution());
+        }
+
+        if (juryData.getDeanResolution() != null) {
+            jury.setDeanResolution(juryData.getDeanResolution());
+        }
+
+        if (juryData.getSecondDeanResolution() != null) {
+            jury.setSecondDeanResolution(juryData.getSecondDeanResolution());
+        }
+        jury.setMeetRequirements(juryData.isMeetRequirements());
         // Guardar cambios en la base de datos
         juryRepository.save(jury);
+
 
         // Enviar correo si cumple con los requisitos
         if (jury.isMeetRequirements()) {

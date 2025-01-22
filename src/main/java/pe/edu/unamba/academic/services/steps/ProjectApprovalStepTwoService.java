@@ -49,6 +49,8 @@ public class ProjectApprovalStepTwoService {
             approval.setCoadviser(updatedProjectApproval.getCoadviser());
             approval.setMeetRequirements(updatedProjectApproval.getMeetRequirements());
             approval.setObservations(updatedProjectApproval.getObservations());
+            approval.setRegistrationNumber(updatedProjectApproval.getRegistrationNumber());
+            approval.setReferenceDate(updatedProjectApproval.getReferenceDate());
 
             // Guardar la aprobación de proyecto actualizada
             ProjectApprovalStepTwo savedApproval = projectApprovalStepTwoRepository.save(approval);
@@ -64,6 +66,7 @@ public class ProjectApprovalStepTwoService {
                 juryAppointment.setMeetRequirements(false);
                 juryAppointment.setAccessory(null);
                 juryAppointment.setObservations(null);
+                juryAppointment.setRegistrationNumber(null);
                 juryAppointmentStepThreeRepository.save(juryAppointment);
 
                 // Crear y guardar la recomposición de jurados

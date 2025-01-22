@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import pe.edu.unamba.academic.models.HasUpdatedAt;
 import pe.edu.unamba.academic.models.actors.Teacher;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Table(name = "p3_designacion_jurado")
@@ -52,7 +51,7 @@ public class JuryAppointmentStepThree implements HasUpdatedAt {
     private String hour;
 
     @Column(name = "fecha_FUT")
-    private Date futDate;
+    private java.sql.Date futDate;
 
     @Column(name="numero_folio")
     private String numberFolio;
