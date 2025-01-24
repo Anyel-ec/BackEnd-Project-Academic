@@ -37,7 +37,7 @@ public class AutenticationServiceImpl {
                 return new JsonResponseDto(false, HttpStatus.BAD_REQUEST.value(), "Parámetros inválidos", null);
             }
 
-            Optional<UserInfo> userFound = userRepository.findByUsernameAndStateTrue(username);
+            Optional<UserInfo> userFound = userRepository.findByUsername(username);
             if (userFound.isEmpty()) {
                 LOG.info("USUARIO NO REGISTRADO");
                 return new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "El usuario no está registrado", null);
@@ -60,7 +60,7 @@ public class AutenticationServiceImpl {
 
     public JsonResponseDto createUserLogin(UserInfo user) {
         try {
-            if (userRepository.findByUsernameAndStateTrue(user.getUsername()).isPresent()) {
+            if (userRepository.findByUsername(user.getUsername()).isPresent()) {
                 return new JsonResponseDto(false, HttpStatus.CONFLICT.value(), "El usuario ya existe", null);
             }
 
@@ -76,7 +76,7 @@ public class AutenticationServiceImpl {
 
     public JsonResponseDto updatePassword(String username, String password) {
         try {
-            Optional<UserInfo> userOptional = userRepository.findByUsernameAndStateTrue(username);
+            Optional<UserInfo> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {
                 return new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "El usuario no está registrado", null);
             }
@@ -96,7 +96,7 @@ public class AutenticationServiceImpl {
 
     public JsonResponseDto updateFirstAccess(String username) {
         try {
-            Optional<UserInfo> userOptional = userRepository.findByUsernameAndStateTrue(username);
+            Optional<UserInfo> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {
                 return new JsonResponseDto(false, HttpStatus.NOT_FOUND.value(), "El usuario no está registrado", null);
             }
